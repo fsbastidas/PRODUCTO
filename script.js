@@ -1,6 +1,6 @@
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${file}.json`); // Cargar JSON desde la carpeta BASES
+        const response = await fetch(`BASES/{file}.json`); // Cargar JSON desde la carpeta BASES
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
 
         const data = await response.json(); // Convertir respuesta a JSON
