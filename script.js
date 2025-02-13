@@ -7,8 +7,8 @@ async function loadDatabase(file) {
         console.log("Datos cargados:", jsonData);
 
         // Obtener la clave correcta del JSON
-        const dataKey = Object.keys(jsonData)[0]; // Extrae la clave correcta
-        const data = jsonData[dataKey]; // Obtiene el array de datos
+        const dataKey = Object.keys(jsonData)[0]; // Obtiene la primera clave del JSON
+        const data = jsonData[dataKey]; // Accede al array de datos
 
         if (!Array.isArray(data)) {
             throw new Error("El formato de datos no es un array válido");
@@ -23,18 +23,18 @@ async function loadDatabase(file) {
 // Función para mostrar los datos en la tabla
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = ""; // Limpiar antes de mostrar nuevos datos
+    tableBody.innerHTML = ""; // Limpia la tabla antes de agregar datos
 
     data.forEach((item, index) => {
         const row = `<tr>
-            <td>${item["Modelo"] || "N/A"}</td>
-            <td>${item["Cliente"] || "N/A"}</td>
-            <td>${item["Territorio"] || "N/A"}</td>
-            <td>${item["Dirección"] || "N/A"}</td>
-            <td>${item["Ciudad"] || "N/A"}</td>
-            <td>${item["Fecha de Venta"] || "N/A"}</td>
-            <td>${item["Fecha de Instalación"] || "N/A"}</td>
-            <td><button onclick="deleteRow(${index})">🗑️ Eliminar</button></td>
+            <td>${item["Model"] || "N/A"}</td>
+            <td>${item["Customer Name"] || "N/A"}</td>
+            <td>${item["Territory"] || "N/A"}</td>
+            <td>${item["Address1"] || "N/A"}</td>
+            <td>${item["City"] || "N/A"}</td>
+            <td>${item["Date Sold"] || "N/A"}</td>
+            <td>${item["Date Installed"] || "N/A"}</td>
+            <td><button onclick="deleteRow(${index})">Eliminar</button></td>
         </tr>`;
         tableBody.innerHTML += row;
     });
@@ -45,4 +45,3 @@ function deleteRow(index) {
     const tableBody = document.getElementById("table-body");
     tableBody.deleteRow(index);
 }
-
