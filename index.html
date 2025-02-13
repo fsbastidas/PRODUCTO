@@ -8,9 +8,15 @@
 </head>
 <body>
     <h1>Base de Datos FUJI</h1>
-    <div class="buttons">
-        <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
-        <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
+
+    <div class="controls">
+        <button onclick="loadDatabase('BASE_FUJIFILM_LED')">🔆 Ver Base FUJI LED</button>
+        <button onclick="loadDatabase('BASE_FUJIFILM_XENON')">🔷 Ver Base FUJI XENON</button>
+    </div>
+
+    <div class="filters">
+        <input type="text" id="search" placeholder="🔎 Buscar cliente o modelo..." onkeyup="filterData()">
+        <p>Total Clientes: <span id="total-clients">0</span></p>
     </div>
 
     <table>
@@ -26,12 +32,9 @@
                 <th>Acciones</th>
             </tr>
         </thead>
-        <tbody id="table-body">
-        </tbody>
+        <tbody id="table-body"></tbody>
     </table>
 
     <script src="script.js"></script>
 </body>
 </html>
-
-
