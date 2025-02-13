@@ -1,21 +1,27 @@
 async function loadDatabase(fileName) {
+    const loadingMessage = document.getElementById("loadingMessage");
+    loadingMessage.style.display = "block";  // Muestra mensaje de carga
+    
     try {
         const response = await fetch(`BASES/${fileName}`);
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
-
+        
         const textData = await response.text();
         const jsonData = parseTextToJson(textData);
-
+        
         console.log("Datos cargados:", jsonData);
         displayData(jsonData);
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
+        alert("Error cargando la base de datos. Verifica los archivos en GitHub.");
+    } finally {
+        loadingMessage.style.display = "none"; // Oculta el mensaje de carga
     }
 }
 
 function parseTextToJson(text) {
     const lines = text.trim().split("\n");
-    const headers = lines[0].split("\t"); // Asegura que los datos están separados por tabulaciones
+    const headers = lines[0].split("\t"); // Separa por tabulación
     const jsonData = lines.slice(1).map(line => {
         const values = line.split("\t");
         let obj = {};
@@ -50,4 +56,3 @@ function deleteRow(index) {
     const tableBody = document.getElementById("table-body");
     tableBody.deleteRow(index);
 }
-
