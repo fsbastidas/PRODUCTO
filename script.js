@@ -1,3 +1,5 @@
+let fullData = []; // Guardar los datos originales para aplicar filtros
+
 async function loadDatabase(file) {
     try {
         const response = await fetch(`BASES/${file}.json`);
@@ -6,20 +8,17 @@ async function loadDatabase(file) {
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
 
-        // Verificamos la estructura del JSON
-        const dataKeys = Object.keys(jsonData);
-        console.log("Claves encontradas en JSON:", dataKeys);
-
-        // Tomamos la primera clave del JSON (ya que JSON contiene un objeto con clave)
-        const dataKey = dataKeys[0];
-        const data = jsonData[dataKey]; // Extraemos los datos
+        // Tomar la clave del JSON (nombre del objeto principal)
+        const dataKey = Object.keys(jsonData)[0];
+        const data = jsonData[dataKey];
 
         if (!Array.isArray(data)) {
             throw new Error("El formato de datos no es un array válido");
         }
 
-        console.log(`Cantidad de registros en ${file}:`, data.length);
+        fullData = data; // Guardamos los datos originales para filtros
         displayData(data);
+        updateCustomerCount(data);
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
     }
@@ -28,7 +27,7 @@ async function loadDatabase(file) {
 // Función para mostrar los datos en la tabla
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = ""; // Limpia la tabla antes de agregar datos
+    tableBody.innerHTML = ""; // Limpia la tabla
 
     data.forEach((item, index) => {
         const row = `<tr>
@@ -43,12 +42,34 @@ function displayData(data) {
         </tr>`;
         tableBody.innerHTML += row;
     });
+}
 
-    console.log("Datos mostrados en la tabla:", data.length);
+// Función para contar clientes únicos
+function updateCustomerCount(data) {
+    const uniqueClients = new Set(data.map(item => item["Customer Name"]));
+    document.getElementById("customer-count").textContent = uniqueClients.size;
 }
 
 // Función para eliminar una fila de la tabla
 function deleteRow(index) {
-    const tableBody = document.getElementById("table-body");
-    tableBody.deleteRow(index);
+    fullData.splice(index, 1); // Elimina el elemento del array original
+    displayData(fullData); // Vuelve a renderizar la tabla
+    updateCustomerCount(fullData);
 }
+
+// Función para filtrar la tabla en tiempo real
+function filterTable() {
+    const modelFilter = document.getElementById("search-model").value.toLowerCase();
+    const clientFilter = document.getElementById("search-client").value.toLowerCase();
+    const cityFilter = document.getElementById("search-city").value.toLowerCase();
+
+    const filteredData = fullData.filter(item => 
+        (item["Model"] || "").toLowerCase().includes(modelFilter) &&
+        (item["Customer Name"] || "").toLowerCase().includes(clientFilter) &&
+        (item["City"] || "").toLowerCase().includes(cityFilter)
+    );
+
+    displayData(filteredData);
+    updateCustomerCount(filteredData);
+}
+
