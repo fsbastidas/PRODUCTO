@@ -1,52 +1,30 @@
-async function loadDatabase(fileName) {
-    const loadingMessage = document.getElementById("loadingMessage");
-    loadingMessage.style.display = "block";  // Muestra mensaje de carga
-    
+async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${fileName}`);
+        const response = await fetch(`BASES/${file}.json`); // Cargar JSON desde la carpeta BASES
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
-        
-        const textData = await response.text();
-        const jsonData = parseTextToJson(textData);
-        
-        console.log("Datos cargados:", jsonData);
-        displayData(jsonData);
+
+        const data = await response.json(); // Convertir respuesta a JSON
+        console.log("Datos cargados:", data);
+        displayData(data);
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
-        alert("Error cargando la base de datos. Verifica los archivos en GitHub.");
-    } finally {
-        loadingMessage.style.display = "none"; // Oculta el mensaje de carga
     }
-}
-
-function parseTextToJson(text) {
-    const lines = text.trim().split("\n");
-    const headers = lines[0].split("\t"); // Separa por tabulación
-    const jsonData = lines.slice(1).map(line => {
-        const values = line.split("\t");
-        let obj = {};
-        headers.forEach((header, index) => {
-            obj[header.trim()] = values[index] ? values[index].trim() : "N/A";
-        });
-        return obj;
-    });
-    return jsonData;
 }
 
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = "";
+    tableBody.innerHTML = ""; // Limpia la tabla antes de agregar datos
 
     data.forEach((item, index) => {
         const row = `<tr>
-            <td>${item.Model || "N/A"}</td>
-            <td>${item["Customer Name"] || "N/A"}</td>
-            <td>${item.Territory || "N/A"}</td>
-            <td>${item.Address1 || "N/A"}</td>
-            <td>${item.City || "N/A"}</td>
-            <td>${item["Date Sold"] || "N/A"}</td>
-            <td>${item["Date Installed"] || "N/A"}</td>
-            <td><button onclick="deleteRow(${index})">Eliminar</button></td>
+            <td>${item["Modelo"] || "N/A"}</td>
+            <td>${item["Cliente"] || "N/A"}</td>
+            <td>${item["Territorio"] || "N/A"}</td>
+            <td>${item["Dirección"] || "N/A"}</td>
+            <td>${item["Ciudad"] || "N/A"}</td>
+            <td>${item["Fecha de Venta"] || "N/A"}</td>
+            <td>${item["Fecha de Instalación"] || "N/A"}</td>
+            <td><button class="delete-btn" onclick="deleteRow(${index})">Eliminar</button></td>
         </tr>`;
         tableBody.innerHTML += row;
     });
@@ -56,3 +34,4 @@ function deleteRow(index) {
     const tableBody = document.getElementById("table-body");
     tableBody.deleteRow(index);
 }
+
