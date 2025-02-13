@@ -6,8 +6,9 @@ async function loadDatabase(file) {
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
 
-        const dataKey = Object.keys(jsonData)[0];
-        const data = jsonData[dataKey];
+        // Obtener la clave correcta del JSON
+        const dataKey = Object.keys(jsonData)[0]; // Extrae la clave correcta
+        const data = jsonData[dataKey]; // Obtiene el array de datos
 
         if (!Array.isArray(data)) {
             throw new Error("El formato de datos no es un array válido");
@@ -22,7 +23,7 @@ async function loadDatabase(file) {
 // Función para mostrar los datos en la tabla
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = "";
+    tableBody.innerHTML = ""; // Limpiar antes de mostrar nuevos datos
 
     data.forEach((item, index) => {
         const row = `<tr>
