@@ -4,20 +4,13 @@ body {
     margin: 20px;
 }
 
-.controls, .filters {
-    margin-bottom: 20px;
-}
-
-input {
-    padding: 10px;
-    width: 250px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
+.buttons {
+    margin-bottom: 15px;
 }
 
 button {
     padding: 10px;
+    margin: 5px;
     cursor: pointer;
     background-color: #007BFF;
     color: white;
@@ -27,6 +20,17 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+.filters {
+    margin-bottom: 15px;
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 table {
@@ -39,10 +43,5 @@ th, td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
-}
-
-p {
-    font-size: 18px;
-    font-weight: bold;
 }
 
