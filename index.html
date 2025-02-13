@@ -5,13 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Base de Datos FUJI</title>
     <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
     <h1>Base de Datos FUJI</h1>
+
     <div class="buttons">
-        <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
-        <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
+        <button onclick="loadDatabase('BASE_FUJIFILM_LED')">🔆 Ver Base FUJI LED</button>
+        <button onclick="loadDatabase('BASE_FUJIFILM_XENON')">💡 Ver Base FUJI XENON</button>
     </div>
+
+    <div class="filters">
+        <input type="text" id="search-model" placeholder="Buscar por modelo..." onkeyup="filterTable()">
+        <input type="text" id="search-client" placeholder="Buscar por cliente..." onkeyup="filterTable()">
+        <input type="text" id="search-city" placeholder="Buscar por ciudad..." onkeyup="filterTable()">
+    </div>
+
+    <h3>Total de Clientes: <span id="customer-count">0</span></h3>
 
     <table>
         <thead>
@@ -29,8 +39,6 @@
         <tbody id="table-body">
         </tbody>
     </table>
-
-    <script src="script.js"></script>
 </body>
 </html>
 
