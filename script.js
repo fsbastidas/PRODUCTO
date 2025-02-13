@@ -1,10 +1,15 @@
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/{file}.json`); // Cargar JSON desde la carpeta BASES
+        const response = await fetch(`BASES/${file}`); // Cargar JSON desde la carpeta BASES
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
+        
+        const jsonData = await response.json(); // Convertir respuesta a JSON
+        console.log("Datos cargados:", jsonData);
 
-        const data = await response.json(); // Convertir respuesta a JSON
-        console.log("Datos cargados:", data);
+        // Asegurar que accedemos al array correcto dentro del JSON
+        const dataKey = Object.keys(jsonData)[0]; // Obtener la primera clave del objeto
+        const data = jsonData[dataKey]; // Extraer el array de datos
+        
         displayData(data);
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
@@ -13,7 +18,7 @@ async function loadDatabase(file) {
 
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = ""; // Limpia la tabla antes de agregar datos
+    tableBody.innerHTML = ""; // Limpiar la tabla antes de agregar datos
 
     data.forEach((item, index) => {
         const row = `<tr>
@@ -24,7 +29,7 @@ function displayData(data) {
             <td>${item["Ciudad"] || "N/A"}</td>
             <td>${item["Fecha de Venta"] || "N/A"}</td>
             <td>${item["Fecha de Instalación"] || "N/A"}</td>
-            <td><button class="delete-btn" onclick="deleteRow(${index})">Eliminar</button></td>
+            <td><button onclick="deleteRow(${index})">Eliminar</button></td>
         </tr>`;
         tableBody.innerHTML += row;
     });
