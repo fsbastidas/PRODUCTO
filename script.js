@@ -6,14 +6,19 @@ async function loadDatabase(file) {
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
 
-        // Obtener la clave correcta del JSON
-        const dataKey = Object.keys(jsonData)[0]; // Obtiene la primera clave del JSON
-        const data = jsonData[dataKey]; // Accede al array de datos
+        // Verificamos la estructura del JSON
+        const dataKeys = Object.keys(jsonData);
+        console.log("Claves encontradas en JSON:", dataKeys);
+
+        // Tomamos la primera clave del JSON (ya que JSON contiene un objeto con clave)
+        const dataKey = dataKeys[0];
+        const data = jsonData[dataKey]; // Extraemos los datos
 
         if (!Array.isArray(data)) {
             throw new Error("El formato de datos no es un array válido");
         }
 
+        console.log(`Cantidad de registros en ${file}:`, data.length);
         displayData(data);
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
@@ -38,6 +43,8 @@ function displayData(data) {
         </tr>`;
         tableBody.innerHTML += row;
     });
+
+    console.log("Datos mostrados en la tabla:", data.length);
 }
 
 // Función para eliminar una fila de la tabla
