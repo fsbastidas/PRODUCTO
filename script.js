@@ -1,13 +1,12 @@
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${file}.json`); // Cargar JSON desde la carpeta BASES
+        const response = await fetch(`BASES/${file}.json`);
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
 
-        const jsonData = await response.json(); // Convertir respuesta a JSON
+        const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
 
-        // Obtener la clave dentro del JSON y acceder a los datos
-        const dataKey = Object.keys(jsonData)[0]; // Obtiene la primera clave del JSON
+        const dataKey = Object.keys(jsonData)[0];
         const data = jsonData[dataKey];
 
         if (!Array.isArray(data)) {
@@ -16,13 +15,14 @@ async function loadDatabase(file) {
 
         displayData(data);
     } catch (error) {
-        console.error("No se pudieron cargar los datos. Verifica el formato del JSON:", error);
+        console.error("No se pudieron cargar los datos:", error);
     }
 }
 
+// Función para mostrar los datos en la tabla
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = ""; // Limpiar la tabla antes de agregar datos
+    tableBody.innerHTML = "";
 
     data.forEach((item, index) => {
         const row = `<tr>
@@ -39,7 +39,9 @@ function displayData(data) {
     });
 }
 
+// Función para eliminar una fila de la tabla
 function deleteRow(index) {
     const tableBody = document.getElementById("table-body");
     tableBody.deleteRow(index);
 }
+
