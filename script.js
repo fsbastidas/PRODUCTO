@@ -52,4 +52,3 @@ function deleteRow(index) {
     const tableBody = document.getElementById("table-body");
     tableBody.deleteRow(index);
 }
-
