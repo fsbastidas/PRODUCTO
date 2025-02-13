@@ -34,7 +34,7 @@ function displayData(data) {
             <td>${item["Ciudad"] || "N/A"}</td>
             <td>${item["Fecha de Venta"] || "N/A"}</td>
             <td>${item["Fecha de Instalación"] || "N/A"}</td>
-            <td><button onclick="deleteRow(${index})">Eliminar</button></td>
+            <td><button onclick="deleteRow(${index})">🗑️ Eliminar</button></td>
         </tr>`;
         tableBody.innerHTML += row;
     });
