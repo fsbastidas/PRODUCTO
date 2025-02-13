@@ -4,13 +4,20 @@ body {
     margin: 20px;
 }
 
-.buttons {
+.controls, .filters {
     margin-bottom: 20px;
+}
+
+input {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
 }
 
 button {
     padding: 10px;
-    margin: 5px;
     cursor: pointer;
     background-color: #007BFF;
     color: white;
@@ -34,8 +41,8 @@ th, td {
     text-align: left;
 }
 
-#loadingMessage {
+p {
     font-size: 18px;
     font-weight: bold;
-    margin-top: 10px;
 }
+
