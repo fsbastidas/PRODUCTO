@@ -15,8 +15,6 @@ async function loadDatabase(file) {
         }
 
         displayData(data);
-    } catch (error) {
-        console.error("No se pudieron cargar los datos. Verifica el formato del JSON:", error);
     }
 }
 
