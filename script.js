@@ -44,11 +44,11 @@ function displayData(data) {
     });
 }
 
-// Función para contar clientes únicos
+// Función para contar clientes
 function updateCustomerCount(data) {
-    const uniqueClients = new Set(data.map(item => item["Customer Name"]));
-    document.getElementById("customer-count").textContent = uniqueClients.size;
+    document.getElementById("total-clients").textContent = data.length; // Cuenta todas las filas
 }
+
 
 // Función para eliminar una fila de la tabla
 function deleteRow(index) {
