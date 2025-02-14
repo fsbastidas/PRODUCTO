@@ -1,20 +1,23 @@
+let fullData = []; // Almacenará todos los datos cargados
+
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${file}`);
+        const response = await fetch(`BASES/${file}.json`);
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
 
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
 
-        // Obtener la clave del JSON (LED o XENON)
-        const dataKey = Object.keys(jsonData)[0];
+        const dataKey = Object.keys(jsonData)[0]; // Clave principal del JSON
         const data = jsonData[dataKey];
 
         if (!Array.isArray(data)) {
             throw new Error("El formato de datos no es un array válido");
         }
 
+        fullData = data; // Guardar datos originales para filtros
         displayData(data);
+        updateCustomerCount(data); // Llamar a la función después de cargar los datos
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
     }
@@ -23,72 +26,44 @@ async function loadDatabase(file) {
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
     tableBody.innerHTML = "";
-
-    let uniqueClients = new Set(); // Conjunto para contar clientes únicos
-
     data.forEach((item, index) => {
-        uniqueClients.add(item["Customer Name"]); // Agregar cliente al conjunto
-
         const row = `<tr>
-            <td contenteditable="false">${item.Model || "N/A"}</td>
-            <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
-            <td contenteditable="false">${item.Territory || "N/A"}</td>
-            <td contenteditable="false">${item.Address1 || "N/A"}</td>
-            <td contenteditable="false">${item.City || "N/A"}</td>
-            <td contenteditable="false">${item["Date Sold"] || "N/A"}</td>
-            <td contenteditable="false">${item["Date Installed"] || "N/A"}</td>
-            <td>
-                <button onclick="editRow(this)">✏️ Editar</button>
-            </td>
+            <td>${item["Model"] || "N/A"}</td>
+            <td>${item["Customer Name"] || "N/A"}</td>
+            <td>${item["Territory"] || "N/A"}</td>
+            <td>${item["Address1"] || "N/A"}</td>
+            <td>${item["City"] || "N/A"}</td>
+            <td>${item["Date Sold"] || "N/A"}</td>
+            <td>${item["Date Installed"] || "N/A"}</td>
+            <td><button onclick="deleteRow(${index})">Eliminar</button></td>
         </tr>`;
         tableBody.innerHTML += row;
     });
 
-    document.getElementById("client-count").textContent = uniqueClients.size; // Actualizar contador
+    updateCustomerCount(data); // Llamar al contador cada vez que se actualiza la tabla
 }
 
-function editRow(button) {
-    let row = button.closest("tr");
-    let cells = row.querySelectorAll("td[contenteditable]");
-
-    if (button.textContent === "✏️ Editar") {
-        cells.forEach(cell => cell.contentEditable = true);
-        button.textContent = "💾 Guardar";
-    } else {
-        cells.forEach(cell => cell.contentEditable = false);
-        button.textContent = "✏️ Editar";
-        saveChanges(row);
-    }
+function deleteRow(index) {
+    fullData.splice(index, 1);
+    displayData(fullData);
 }
 
-function saveChanges(row) {
-    let updatedData = {
-        Model: row.cells[0].textContent,
-        "Customer Name": row.cells[1].textContent,
-        Territory: row.cells[2].textContent,
-        Address1: row.cells[3].textContent,
-        City: row.cells[4].textContent,
-        "Date Sold": row.cells[5].textContent,
-        "Date Installed": row.cells[6].textContent
-    };
-
-    console.log("Datos actualizados:", updatedData);
-    alert("Cambios guardados correctamente.");
+function updateCustomerCount(data) {
+    const uniqueCustomers = new Set(data.map(item => item["Customer Name"]?.trim() || "N/A"));
+    document.getElementById("total-clients").textContent = uniqueCustomers.size;
 }
 
-function filterTable() {
+function filterData() {
     const modelFilter = document.getElementById("filter-model").value.toLowerCase();
-    const clientFilter = document.getElementById("filter-client").value.toLowerCase();
+    const customerFilter = document.getElementById("filter-customer").value.toLowerCase();
     const cityFilter = document.getElementById("filter-city").value.toLowerCase();
-    
-    const rows = document.querySelectorAll("#table-body tr");
-    rows.forEach(row => {
-        const model = row.cells[0].textContent.toLowerCase();
-        const client = row.cells[1].textContent.toLowerCase();
-        const city = row.cells[4].textContent.toLowerCase();
-        
-        row.style.display = 
-            (model.includes(modelFilter) && client.includes(clientFilter) && city.includes(cityFilter)) 
-            ? "" : "none";
-    });
+
+    const filteredData = fullData.filter(item =>
+        (item["Model"] || "").toLowerCase().includes(modelFilter) &&
+        (item["Customer Name"] || "").toLowerCase().includes(customerFilter) &&
+        (item["City"] || "").toLowerCase().includes(cityFilter)
+    );
+
+    displayData(filteredData);
 }
+
