@@ -17,10 +17,37 @@ async function loadDatabase(file) {
         }
 
         console.log(`Cantidad de registros en ${file}:`, currentData.length);
+        populateFilters(currentData);
         displayData(currentData);
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
     }
+}
+
+// Función para llenar los filtros con valores únicos
+function populateFilters(data) {
+    const modelFilter = document.getElementById("filter-model");
+    const clientFilter = document.getElementById("filter-client");
+    const cityFilter = document.getElementById("filter-city");
+
+    const uniqueModels = [...new Set(data.map(item => item["Model"] || "N/A"))];
+    const uniqueClients = [...new Set(data.map(item => item["Customer Name"] || "N/A"))];
+    const uniqueCities = [...new Set(data.map(item => item["City"] || "N/A"))];
+
+    populateDropdown(modelFilter, uniqueModels);
+    populateDropdown(clientFilter, uniqueClients);
+    populateDropdown(cityFilter, uniqueCities);
+}
+
+// Función para llenar un select con opciones
+function populateDropdown(selectElement, values) {
+    selectElement.innerHTML = '<option value="">Todos</option>'; // Opción por defecto
+    values.forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        selectElement.appendChild(option);
+    });
 }
 
 // Función para mostrar los datos en la tabla
@@ -35,7 +62,7 @@ function displayData(data) {
         row.innerHTML = `
             <td>${item["Model"] || "N/A"}</td>
             <td>${item["Customer Name"] || "N/A"}</td>
-            <td>${item["Territoy"] || "N/A"}</td>
+            <td>${item["Territory"] || "N/A"}</td>
             <td>${item["Address1"] || "N/A"}</td>
             <td>${item["City"] || "N/A"}</td>
             <td>${item["Date Sold"] || "N/A"}</td>
@@ -47,30 +74,25 @@ function displayData(data) {
 
     // Actualiza la cantidad de registros en el recuadro
     recordCount.textContent = data.length;
+}
 
-    console.log("Datos mostrados en la tabla:", data.length);
+// Función para filtrar la tabla
+function filterTable() {
+    const modelFilter = document.getElementById("filter-model").value;
+    const clientFilter = document.getElementById("filter-client").value;
+    const cityFilter = document.getElementById("filter-city").value;
+
+    const filteredData = currentData.filter(item =>
+        (modelFilter === "" || item["Model"] === modelFilter) &&
+        (clientFilter === "" || item["Customer Name"] === clientFilter) &&
+        (cityFilter === "" || item["City"] === cityFilter)
+    );
+
+    displayData(filteredData);
 }
 
 // Función para eliminar una fila de la tabla
 function deleteRow(index) {
     currentData.splice(index, 1); // Eliminar el elemento del array
     displayData(currentData); // Volver a mostrar los datos
-}
-
-// Función para filtrar la tabla
-function filterTable() {
-    const modelFilter = document.getElementById("filter-model").value.toLowerCase();
-    const clientFilter = document.getElementById("filter-client").value.toLowerCase();
-    const cityFilter = document.getElementById("filter-city").value.toLowerCase();
-
-    console.log("Filtros:", { modelFilter, clientFilter, cityFilter });
-
-    const filteredData = currentData.filter(item => 
-        (item["Model"] || "").toLowerCase().includes(modelFilter) &&
-        (item["Customer Name"] || "").toLowerCase().includes(clientFilter) &&
-        (item["City"] || "").toLowerCase().includes(cityFilter)
-    );
-
-    console.log("Datos filtrados:", filteredData);
-    displayData(filteredData);
 }
