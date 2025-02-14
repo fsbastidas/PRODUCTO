@@ -32,7 +32,7 @@ function displayData(data) {
         const row = `<tr>
             <td>${item["Model"] || "N/A"}</td>
             <td>${item["Customer Name"] || "N/A"}</td>
-            <td>${item["Territory"] || "N/A"}</td>
+            <td>${item["Territoy"] || "N/A"}</td>
             <td>${item["Address1"] || "N/A"}</td>
             <td>${item["City"] || "N/A"}</td>
             <td>${item["Date Sold"] || "N/A"}</td>
