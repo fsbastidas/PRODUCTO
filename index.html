@@ -9,10 +9,33 @@
 </head>
 <body>
     <h1>Base de Datos FUJI</h1>
-    <div class="buttons">
+
+    <!-- Botones para cargar las bases de datos -->
         <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
         <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
+
+    <!-- Recuadro para mostrar la cantidad de filas -->
+    <div id="data-info">
+        <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
     </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Cliente</th>
+                <th>Territorio</th>
+                <th>Dirección</th>
+                <th>Ciudad</th>
+                <th>Fecha de Venta</th>
+                <th>Fecha de Instalación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</body>
+</html>
 
     <div class="filters">
         <input type="text" id="filter-model" placeholder="Buscar por modelo..." oninput="filterTable()">
