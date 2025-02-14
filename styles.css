@@ -23,14 +23,13 @@ button:hover {
 }
 
 .filters {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 input {
     padding: 8px;
     margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    width: 200px;
 }
 
 table {
@@ -43,5 +42,9 @@ th, td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
 }
 
