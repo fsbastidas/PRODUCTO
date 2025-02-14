@@ -8,7 +8,7 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <h1>BASE DE DATOS PRODUCTO</h1>
+    <h1>Base de Datos FUJI</h1>
 
     <!-- Botones para cargar las bases de datos -->
     <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
@@ -19,11 +19,25 @@
         <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
     </div>
 
-    <!-- Filtros de búsqueda -->
+    <!-- Dropdowns de filtros -->
     <div class="filters">
-        <input type="text" id="filter-model" placeholder="Buscar por modelo..." oninput="filterTable()">
-        <input type="text" id="filter-client" placeholder="Buscar por cliente..." oninput="filterTable()">
-        <input type="text" id="filter-city" placeholder="Buscar por ciudad..." oninput="filterTable()">
+        <label>Modelo:
+            <select id="filter-model" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
+
+        <label>Cliente:
+            <select id="filter-client" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
+
+        <label>Ciudad:
+            <select id="filter-city" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
     </div>
 
     <!-- Tabla -->
@@ -44,3 +58,4 @@
     </table>
 </body>
 </html>
+
