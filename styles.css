@@ -40,3 +40,16 @@ th, td {
     background-color: #f1f1f1;
 }
 
+/* Estilo para los filtros */
+.filters {
+    margin: 10px auto;
+    text-align: center;
+}
+
+.filters input {
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
