@@ -5,7 +5,7 @@ body {
 }
 
 button {
-    padding: 10px;
+    padding: 8px;
     margin: 5px;
     cursor: pointer;
     background-color: #007BFF;
@@ -16,12 +16,6 @@ button {
 
 button:hover {
     background-color: #0056b3;
-}
-
-button:disabled {
-    background-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
 }
 
 table {
@@ -36,7 +30,6 @@ th, td {
     text-align: left;
 }
 
-/* Estilo para el recuadro de cantidad de filas */
 #data-info {
     margin: 10px auto;
     padding: 10px;
@@ -46,7 +39,8 @@ th, td {
     background-color: #f1f1f1;
 }
 
-/* Resaltado de celdas editables */
-td[contenteditable="true"] {
-    background-color: #ffffcc;
+.filters input {
+    margin: 5px;
+    padding: 8px;
+    width: 180px;
 }
