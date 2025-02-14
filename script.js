@@ -42,6 +42,7 @@ async function loadDatabase(file) {
 
         console.log(`Cantidad de registros en ${file}:`, currentData.length);
         displayData(currentData);
+        populateFilters(currentData); // Llenar los filtros
 
         // Actualizar estilos de los botones según la base seleccionada
         updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
@@ -50,7 +51,7 @@ async function loadDatabase(file) {
     }
 }
 
-// Función para mostrar los datos en la tabla con botones Editar y Eliminar
+// Función para mostrar los datos en la tabla
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
     const recordCount = document.getElementById("record-count");
@@ -77,6 +78,56 @@ function displayData(data) {
 
     // Actualiza la cantidad de registros en el recuadro
     recordCount.textContent = data.length;
+}
+
+// Función para llenar los filtros con valores únicos
+function populateFilters(data) {
+    const filters = {
+        "filter-model": "Model",
+        "filter-client": "Customer Name",
+        "filter-territoy": "Territoy",
+        "filter-city": "City",
+        "filter-date-sold": "Date Sold",
+        "filter-date-installed": "Date Installed"
+    };
+
+    Object.keys(filters).forEach(filterId => {
+        const select = document.getElementById(filterId);
+        select.innerHTML = '<option value="">Todos</option>'; // Resetear opciones
+
+        const uniqueValues = [...new Set(data.map(item => item[filters[filterId]]))].sort();
+        uniqueValues.forEach(value => {
+            if (value) {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = value;
+                select.appendChild(option);
+            }
+        });
+    });
+}
+
+// Función para filtrar los datos en la tabla
+function filterTable() {
+    const modelFilter = document.getElementById("filter-model").value;
+    const clientFilter = document.getElementById("filter-client").value;
+    const cityFilter = document.getElementById("filter-city").value;
+    const territoyFilter = document.getElementById("filter-territoy").value;
+    const dateSoldFilter = document.getElementById("filter-date-sold").value;
+    const dateInstalledFilter = document.getElementById("filter-date-installed").value;
+
+    const filteredData = currentData.filter(item => {
+        return (
+            (modelFilter === "" || item["Model"] === modelFilter) &&
+            (clientFilter === "" || item["Customer Name"] === clientFilter) &&
+            (cityFilter === "" || item["City"] === cityFilter) &&
+            (territoyFilter === "" || item["Territoy"] === territoyFilter) &&
+            (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
+            (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
+        );
+    });
+
+    displayData(filteredData);
 }
 
 // Función para habilitar la edición de la fila
@@ -112,37 +163,3 @@ function deleteRow(index) {
     currentData.splice(index, 1); // Elimina la fila del array
     displayData(currentData); // Recarga la tabla con los datos actualizados
 }
-
-// Función para filtrar los datos en la tabla
-function filterTable() {
-    const modelFilter = document.getElementById("filter-model").value.toLowerCase();
-    const clientFilter = document.getElementById("filter-client").value.toLowerCase();
-    const cityFilter = document.getElementById("filter-city").value.toLowerCase();
-    const territoyFilter = document.getElementById("filter-territoy").value.toLowerCase();
-    const dateSoldFilter = document.getElementById("filter-date-sold").value;
-    const dateInstalledFilter = document.getElementById("filter-date-installed").value;
-
-    const filteredData = currentData.filter(item => {
-        return (
-            item["Model"].toLowerCase().includes(modelFilter) &&
-            item["Customer Name"].toLowerCase().includes(clientFilter) &&
-            item["City"].toLowerCase().includes(cityFilter) &&
-            item["Territoy"].toLowerCase().includes(territoyFilter) &&
-            (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
-            (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
-        );
-    });
-
-    displayData(filteredData);
-}
-
-
-
-
-
-
-
-
-
-
-
