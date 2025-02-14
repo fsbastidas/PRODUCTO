@@ -1,14 +1,12 @@
-let fullData = []; // Guardar los datos originales para aplicar filtros
-
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${file}.json`);
+        const response = await fetch(`BASES/${file}`);
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
 
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
 
-        // Tomar la clave del JSON (nombre del objeto principal)
+        // Obtener la clave del JSON (LED o XENON)
         const dataKey = Object.keys(jsonData)[0];
         const data = jsonData[dataKey];
 
@@ -16,60 +14,81 @@ async function loadDatabase(file) {
             throw new Error("El formato de datos no es un array válido");
         }
 
-        fullData = data; // Guardamos los datos originales para filtros
         displayData(data);
-        updateCustomerCount(data);
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
     }
 }
 
-// Función para mostrar los datos en la tabla
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
-    tableBody.innerHTML = ""; // Limpia la tabla
+    tableBody.innerHTML = "";
+
+    let uniqueClients = new Set(); // Conjunto para contar clientes únicos
 
     data.forEach((item, index) => {
+        uniqueClients.add(item["Customer Name"]); // Agregar cliente al conjunto
+
         const row = `<tr>
-            <td>${item["Model"] || "N/A"}</td>
-            <td>${item["Customer Name"] || "N/A"}</td>
-            <td>${item["Territory"] || "N/A"}</td>
-            <td>${item["Address1"] || "N/A"}</td>
-            <td>${item["City"] || "N/A"}</td>
-            <td>${item["Date Sold"] || "N/A"}</td>
-            <td>${item["Date Installed"] || "N/A"}</td>
-            <td><button onclick="deleteRow(${index})">Eliminar</button></td>
+            <td contenteditable="false">${item.Model || "N/A"}</td>
+            <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
+            <td contenteditable="false">${item.Territory || "N/A"}</td>
+            <td contenteditable="false">${item.Address1 || "N/A"}</td>
+            <td contenteditable="false">${item.City || "N/A"}</td>
+            <td contenteditable="false">${item["Date Sold"] || "N/A"}</td>
+            <td contenteditable="false">${item["Date Installed"] || "N/A"}</td>
+            <td>
+                <button onclick="editRow(this)">✏️ Editar</button>
+            </td>
         </tr>`;
         tableBody.innerHTML += row;
     });
+
+    document.getElementById("client-count").textContent = uniqueClients.size; // Actualizar contador
 }
 
-// Función para contar clientes
-function updateCustomerCount(data) {
-    document.getElementById("total-clients").textContent = data.length; // Cuenta todas las filas
+function editRow(button) {
+    let row = button.closest("tr");
+    let cells = row.querySelectorAll("td[contenteditable]");
+
+    if (button.textContent === "✏️ Editar") {
+        cells.forEach(cell => cell.contentEditable = true);
+        button.textContent = "💾 Guardar";
+    } else {
+        cells.forEach(cell => cell.contentEditable = false);
+        button.textContent = "✏️ Editar";
+        saveChanges(row);
+    }
 }
 
+function saveChanges(row) {
+    let updatedData = {
+        Model: row.cells[0].textContent,
+        "Customer Name": row.cells[1].textContent,
+        Territory: row.cells[2].textContent,
+        Address1: row.cells[3].textContent,
+        City: row.cells[4].textContent,
+        "Date Sold": row.cells[5].textContent,
+        "Date Installed": row.cells[6].textContent
+    };
 
-// Función para eliminar una fila de la tabla
-function deleteRow(index) {
-    fullData.splice(index, 1); // Elimina el elemento del array original
-    displayData(fullData); // Vuelve a renderizar la tabla
-    updateCustomerCount(fullData);
+    console.log("Datos actualizados:", updatedData);
+    alert("Cambios guardados correctamente.");
 }
 
-// Función para filtrar la tabla en tiempo real
 function filterTable() {
-    const modelFilter = document.getElementById("search-model").value.toLowerCase();
-    const clientFilter = document.getElementById("search-client").value.toLowerCase();
-    const cityFilter = document.getElementById("search-city").value.toLowerCase();
-
-    const filteredData = fullData.filter(item => 
-        (item["Model"] || "").toLowerCase().includes(modelFilter) &&
-        (item["Customer Name"] || "").toLowerCase().includes(clientFilter) &&
-        (item["City"] || "").toLowerCase().includes(cityFilter)
-    );
-
-    displayData(filteredData);
-    updateCustomerCount(filteredData);
+    const modelFilter = document.getElementById("filter-model").value.toLowerCase();
+    const clientFilter = document.getElementById("filter-client").value.toLowerCase();
+    const cityFilter = document.getElementById("filter-city").value.toLowerCase();
+    
+    const rows = document.querySelectorAll("#table-body tr");
+    rows.forEach(row => {
+        const model = row.cells[0].textContent.toLowerCase();
+        const client = row.cells[1].textContent.toLowerCase();
+        const city = row.cells[4].textContent.toLowerCase();
+        
+        row.style.display = 
+            (model.includes(modelFilter) && client.includes(clientFilter) && city.includes(cityFilter)) 
+            ? "" : "none";
+    });
 }
-
