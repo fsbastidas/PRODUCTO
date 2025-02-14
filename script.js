@@ -23,11 +23,10 @@ function updateButtonStyles(activeButton) {
         btnLed.disabled = false;
     }
 }
-
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${file}.json`);
-        if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
+        const response = await fetch(BASES/${file}.json);
+        if (!response.ok) throw new Error(Error al cargar datos: ${response.status});
 
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
@@ -40,9 +39,8 @@ async function loadDatabase(file) {
             throw new Error("El formato de datos no es un array válido");
         }
 
-        console.log(`Cantidad de registros en ${file}:`, currentData.length);
+        console.log(Cantidad de registros en ${file}:, currentData.length);
         displayData(currentData);
-
         // Actualizar estilos de los botones según la base seleccionada
         updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
     } catch (error) {
@@ -59,7 +57,7 @@ function displayData(data) {
 
     data.forEach((item, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = `
+        row.innerHTML = 
             <td contenteditable="false">${item["Model"] || "N/A"}</td>
             <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
             <td contenteditable="false">${item["Territoy"] || "N/A"}</td>
@@ -71,7 +69,7 @@ function displayData(data) {
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
             </td>
-        `;
+        ;
         tableBody.appendChild(row);
     });
 
@@ -109,8 +107,12 @@ function editRow(button, index) {
 
 // Función para eliminar una fila de la tabla
 function deleteRow(index) {
-    currentData.splice(index, 1); // Elimina la fila del array
-    displayData(currentData); // Recarga la tabla con los datos actualizados
+    const tableBody = document.getElementById("table-body");
+    tableBody.deleteRow(index);
+
+    // Actualizar la cantidad de registros después de eliminar
+    const recordCount = document.getElementById("record-count");
+    recordCount.textContent = tableBody.rows.length;
 }
 
 // Función para filtrar los datos en la tabla
