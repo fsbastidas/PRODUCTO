@@ -1,4 +1,4 @@
-let currentData = []; // Guardar datos cargados
+let currentData = []; // Variable global para guardar los datos cargados
 
 async function loadDatabase(file) {
     try {
@@ -10,7 +10,7 @@ async function loadDatabase(file) {
 
         // Obtener la clave del JSON
         const dataKey = Object.keys(jsonData)[0];
-        currentData = jsonData[dataKey]; // Guardar los datos en la variable global
+        currentData = jsonData[dataKey]; // Guardar datos en variable global
 
         if (!Array.isArray(currentData)) {
             throw new Error("El formato de datos no es un array válido");
@@ -31,7 +31,8 @@ function displayData(data) {
     tableBody.innerHTML = ""; // Limpia la tabla antes de agregar datos
 
     data.forEach((item, index) => {
-        const row = `<tr>
+        const row = document.createElement("tr");
+        row.innerHTML = `
             <td>${item["Model"] || "N/A"}</td>
             <td>${item["Customer Name"] || "N/A"}</td>
             <td>${item["Territory"] || "N/A"}</td>
@@ -40,8 +41,8 @@ function displayData(data) {
             <td>${item["Date Sold"] || "N/A"}</td>
             <td>${item["Date Installed"] || "N/A"}</td>
             <td><button onclick="deleteRow(${index})">Eliminar</button></td>
-        </tr>`;
-        tableBody.innerHTML += row;
+        `;
+        tableBody.appendChild(row);
     });
 
     // Actualiza la cantidad de registros en el recuadro
@@ -62,11 +63,14 @@ function filterTable() {
     const clientFilter = document.getElementById("filter-client").value.toLowerCase();
     const cityFilter = document.getElementById("filter-city").value.toLowerCase();
 
+    console.log("Filtros:", { modelFilter, clientFilter, cityFilter });
+
     const filteredData = currentData.filter(item => 
         (item["Model"] || "").toLowerCase().includes(modelFilter) &&
         (item["Customer Name"] || "").toLowerCase().includes(clientFilter) &&
         (item["City"] || "").toLowerCase().includes(cityFilter)
     );
 
+    console.log("Datos filtrados:", filteredData);
     displayData(filteredData);
 }
