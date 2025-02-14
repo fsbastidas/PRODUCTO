@@ -46,11 +46,11 @@ th, td {
     text-align: center;
 }
 
-.filters input {
+.filters select {
     padding: 8px;
     margin: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 200px;
+    text-align: center;
 }
-
