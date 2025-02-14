@@ -8,7 +8,7 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <h1>BASE AREA PRODUCTO</h1>
+    <h1>Base de Datos FUJI</h1>
 
     <!-- Botones para cargar las bases de datos -->
     <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
@@ -33,9 +33,27 @@
             </select>
         </label>
 
+        <label>Territorio:
+            <select id="filter-territoy" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
+
         <label>Ciudad:
             <select id="filter-city" onchange="filterTable()">
                 <option value="">Todos</option>
+            </select>
+        </label>
+
+        <label>Fecha de Venta:
+            <select id="filter-date-sold" onchange="filterTable()">
+                <option value="">Todas</option>
+            </select>
+        </label>
+
+        <label>Fecha de Instalación:
+            <select id="filter-date-installed" onchange="filterTable()">
+                <option value="">Todas</option>
             </select>
         </label>
     </div>
