@@ -4,10 +4,6 @@ body {
     margin: 20px;
 }
 
-.buttons {
-    margin-bottom: 15px;
-}
-
 button {
     padding: 10px;
     margin: 5px;
@@ -22,16 +18,6 @@ button:hover {
     background-color: #0056b3;
 }
 
-.filters {
-    margin-bottom: 10px;
-}
-
-input {
-    padding: 8px;
-    margin: 5px;
-    width: 200px;
-}
-
 table {
     width: 90%;
     margin: 20px auto;
@@ -44,7 +30,13 @@ th, td {
     text-align: left;
 }
 
-th {
-    background-color: #f2f2f2;
+/* Estilo para el recuadro de cantidad de filas */
+#data-info {
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    background-color: #f1f1f1;
 }
 
