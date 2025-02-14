@@ -1,5 +1,29 @@
 let currentData = []; // Guardar datos actuales para modificar y filtrar
 
+// Función para actualizar el estado visual de los botones
+function updateButtonStyles(activeButton) {
+    const btnLed = document.getElementById("btnLed");
+    const btnXenon = document.getElementById("btnXenon");
+
+    if (activeButton === "LED") {
+        btnLed.style.backgroundColor = "#28a745"; // Verde activo
+        btnLed.style.color = "white";
+        btnLed.disabled = true;
+
+        btnXenon.style.backgroundColor = "#ccc"; // Apagado
+        btnXenon.style.color = "#666";
+        btnXenon.disabled = false;
+    } else {
+        btnXenon.style.backgroundColor = "#28a745"; // Verde activo
+        btnXenon.style.color = "white";
+        btnXenon.disabled = true;
+
+        btnLed.style.backgroundColor = "#ccc"; // Apagado
+        btnLed.style.color = "#666";
+        btnLed.disabled = false;
+    }
+}
+
 async function loadDatabase(file) {
     try {
         const response = await fetch(`BASES/${file}.json`);
@@ -18,6 +42,9 @@ async function loadDatabase(file) {
 
         console.log(`Cantidad de registros en ${file}:`, currentData.length);
         displayData(currentData);
+
+        // Actualizar estilos de los botones según la base seleccionada
+        updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
     }
@@ -35,7 +62,7 @@ function displayData(data) {
         row.innerHTML = `
             <td contenteditable="false">${item["Model"] || "N/A"}</td>
             <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
-            <td contenteditable="false">${item["Territoy"] || "N/A"}</td>
+            <td contenteditable="false">${item["Territory"] || "N/A"}</td>
             <td contenteditable="false">${item["Address1"] || "N/A"}</td>
             <td contenteditable="false">${item["City"] || "N/A"}</td>
             <td contenteditable="false">${item["Date Sold"] || "N/A"}</td>
@@ -82,12 +109,8 @@ function editRow(button, index) {
 
 // Función para eliminar una fila de la tabla
 function deleteRow(index) {
-    const tableBody = document.getElementById("table-body");
-    tableBody.deleteRow(index);
-
-    // Actualizar la cantidad de registros después de eliminar
-    const recordCount = document.getElementById("record-count");
-    recordCount.textContent = tableBody.rows.length;
+    currentData.splice(index, 1); // Elimina la fila del array
+    displayData(currentData); // Recarga la tabla con los datos actualizados
 }
 
 // Función para filtrar los datos en la tabla
@@ -95,7 +118,7 @@ function filterTable() {
     const modelFilter = document.getElementById("filter-model").value.toLowerCase();
     const clientFilter = document.getElementById("filter-client").value.toLowerCase();
     const cityFilter = document.getElementById("filter-city").value.toLowerCase();
-    const territoyFilter = document.getElementById("filter-territoy").value.toLowerCase();
+    const territoryFilter = document.getElementById("filter-territory").value.toLowerCase();
     const dateSoldFilter = document.getElementById("filter-date-sold").value;
     const dateInstalledFilter = document.getElementById("filter-date-installed").value;
 
@@ -104,7 +127,7 @@ function filterTable() {
             item["Model"].toLowerCase().includes(modelFilter) &&
             item["Customer Name"].toLowerCase().includes(clientFilter) &&
             item["City"].toLowerCase().includes(cityFilter) &&
-            item["Territoy"].toLowerCase().includes(territoyFilter) &&
+            item["Territory"].toLowerCase().includes(territoryFilter) &&
             (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
             (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
         );
@@ -112,4 +135,3 @@ function filterTable() {
 
     displayData(filteredData);
 }
-
