@@ -26,21 +26,17 @@ async function loadDatabase(file) {
 
 // Función para llenar los filtros con valores únicos
 function populateFilters(data) {
-    const modelFilter = document.getElementById("filter-model");
-    const clientFilter = document.getElementById("filter-client");
-    const cityFilter = document.getElementById("filter-city");
-
-    const uniqueModels = [...new Set(data.map(item => item["Model"] || "N/A"))];
-    const uniqueClients = [...new Set(data.map(item => item["Customer Name"] || "N/A"))];
-    const uniqueCities = [...new Set(data.map(item => item["City"] || "N/A"))];
-
-    populateDropdown(modelFilter, uniqueModels);
-    populateDropdown(clientFilter, uniqueClients);
-    populateDropdown(cityFilter, uniqueCities);
+    populateDropdown("filter-model", [...new Set(data.map(item => item["Model"] || "N/A"))]);
+    populateDropdown("filter-client", [...new Set(data.map(item => item["Customer Name"] || "N/A"))]);
+    populateDropdown("filter-territoy", [...new Set(data.map(item => item["Territory"] || "N/A"))]);
+    populateDropdown("filter-city", [...new Set(data.map(item => item["City"] || "N/A"))]);
+    populateDropdown("filter-date-sold", [...new Set(data.map(item => item["Date Sold"] || "N/A"))]);
+    populateDropdown("filter-date-installed", [...new Set(data.map(item => item["Date Installed"] || "N/A"))]);
 }
 
 // Función para llenar un select con opciones
-function populateDropdown(selectElement, values) {
+function populateDropdown(selectId, values) {
+    const selectElement = document.getElementById(selectId);
     selectElement.innerHTML = '<option value="">Todos</option>'; // Opción por defecto
     values.forEach(value => {
         const option = document.createElement("option");
@@ -60,13 +56,13 @@ function displayData(data) {
     data.forEach((item, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${item["Model"] || ""}</td>
-            <td>${item["Customer Name"] || ""}</td>
-            <td>${item["Territoy"] || ""}</td>
-            <td>${item["Address1"] || ""}</td>
-            <td>${item["City"] || ""}</td>
-            <td>${item["Date Sold"] || ""}</td>
-            <td>${item["Date Installed"] || ""}</td>
+            <td>${item["Model"] || "N/A"}</td>
+            <td>${item["Customer Name"] || "N/A"}</td>
+            <td>${item["Territoy"] || "N/A"}</td>
+            <td>${item["Address1"] || "N/A"}</td>
+            <td>${item["City"] || "N/A"}</td>
+            <td>${item["Date Sold"] || "N/A"}</td>
+            <td>${item["Date Installed"] || "N/A"}</td>
             <td><button onclick="deleteRow(${index})">Eliminar</button></td>
         `;
         tableBody.appendChild(row);
@@ -80,12 +76,18 @@ function displayData(data) {
 function filterTable() {
     const modelFilter = document.getElementById("filter-model").value;
     const clientFilter = document.getElementById("filter-client").value;
+    const territoyFilter = document.getElementById("filter-territory").value;
     const cityFilter = document.getElementById("filter-city").value;
+    const dateSoldFilter = document.getElementById("filter-date-sold").value;
+    const dateInstalledFilter = document.getElementById("filter-date-installed").value;
 
     const filteredData = currentData.filter(item =>
         (modelFilter === "" || item["Model"] === modelFilter) &&
         (clientFilter === "" || item["Customer Name"] === clientFilter) &&
-        (cityFilter === "" || item["City"] === cityFilter)
+        (territoyFilter === "" || item["Territoy"] === territoyFilter) &&
+        (cityFilter === "" || item["City"] === cityFilter) &&
+        (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
+        (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
     );
 
     displayData(filteredData);
@@ -96,3 +98,4 @@ function deleteRow(index) {
     currentData.splice(index, 1); // Eliminar el elemento del array
     displayData(currentData); // Volver a mostrar los datos
 }
+
