@@ -60,13 +60,13 @@ function displayData(data) {
     data.forEach((item, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${item["Model"] || "N/A"}</td>
-            <td>${item["Customer Name"] || "N/A"}</td>
-            <td>${item["Territoy"] || "N/A"}</td>
-            <td>${item["Address1"] || "N/A"}</td>
-            <td>${item["City"] || "N/A"}</td>
-            <td>${item["Date Sold"] || "N/A"}</td>
-            <td>${item["Date Installed"] || "N/A"}</td>
+            <td>${item["Model"] || ""}</td>
+            <td>${item["Customer Name"] || ""}</td>
+            <td>${item["Territoy"] || ""}</td>
+            <td>${item["Address1"] || ""}</td>
+            <td>${item["City"] || ""}</td>
+            <td>${item["Date Sold"] || ""}</td>
+            <td>${item["Date Installed"] || ""}</td>
             <td><button onclick="deleteRow(${index})">Eliminar</button></td>
         `;
         tableBody.appendChild(row);
