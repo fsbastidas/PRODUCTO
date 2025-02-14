@@ -62,7 +62,7 @@ function displayData(data) {
         row.innerHTML = `
             <td contenteditable="false">${item["Model"] || "N/A"}</td>
             <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
-            <td contenteditable="false">${item["Territory"] || "N/A"}</td>
+            <td contenteditable="false">${item["Territoy"] || "N/A"}</td>
             <td contenteditable="false">${item["Address1"] || "N/A"}</td>
             <td contenteditable="false">${item["City"] || "N/A"}</td>
             <td contenteditable="false">${item["Date Sold"] || "N/A"}</td>
@@ -118,7 +118,7 @@ function filterTable() {
     const modelFilter = document.getElementById("filter-model").value.toLowerCase();
     const clientFilter = document.getElementById("filter-client").value.toLowerCase();
     const cityFilter = document.getElementById("filter-city").value.toLowerCase();
-    const territoryFilter = document.getElementById("filter-territory").value.toLowerCase();
+    const territoyFilter = document.getElementById("filter-territoy").value.toLowerCase();
     const dateSoldFilter = document.getElementById("filter-date-sold").value;
     const dateInstalledFilter = document.getElementById("filter-date-installed").value;
 
@@ -127,7 +127,7 @@ function filterTable() {
             item["Model"].toLowerCase().includes(modelFilter) &&
             item["Customer Name"].toLowerCase().includes(clientFilter) &&
             item["City"].toLowerCase().includes(cityFilter) &&
-            item["Territory"].toLowerCase().includes(territoryFilter) &&
+            item["Territoy"].toLowerCase().includes(territoyFilter) &&
             (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
             (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
         );
