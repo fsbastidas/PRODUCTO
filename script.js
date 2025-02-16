@@ -4,7 +4,6 @@ let currentData = []; // Guardar datos actuales para modificar y filtrar
 function updateButtonStyles(activeButton) {
     const btnLed = document.getElementById("btnLed");
     const btnXenon = document.getElementById("btnXenon");
-
     if (activeButton === "LED") {
         btnLed.style.backgroundColor = "#28a745"; // Verde activo
         btnLed.style.color = "white";
