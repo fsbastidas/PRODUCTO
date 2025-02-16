@@ -62,7 +62,7 @@ function displayData(data) {
 
     data.forEach((item, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = 
+        row.innerHTML = `
             <td contenteditable="false">${item["Model"] || "N/A"}</td>
             <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
             <td contenteditable="false">${item["Territoy"] || "N/A"}</td>
@@ -74,7 +74,7 @@ function displayData(data) {
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
             </td>
-        ;
+        `;
         tableBody.appendChild(row);
     });
 
