@@ -24,13 +24,15 @@ function updateButtonStyles(activeButton) {
     }
 }
 
+// Función para limpiar la tabla antes de cargar datos nuevos
 function clearTable() {
     document.getElementById("table-body").innerHTML = "";
 }
 
+// Función para cargar la base de datos
 async function loadDatabase(file) {
     try {
-        clearTable(); // Limpia antes de cargar nuevos datos
+        clearTable(); // Limpia la tabla antes de cargar nuevos datos
 
         const response = await fetch(`BASES/${file}.json`);
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
@@ -41,14 +43,11 @@ async function loadDatabase(file) {
         const dataKey = Object.keys(jsonData)[0];
         currentData = jsonData[dataKey];
 
-        if (!Array.isArray(currentData)) {
-            throw new Error("El formato de datos no es un array válido");
-        }
+        if (!Array.isArray(currentData)) throw new Error("El formato de datos no es válido");
 
         console.log(`Cantidad de registros en ${file}: ${currentData.length}`);
         displayData(currentData);
         populateFilters(currentData);
-
         updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
@@ -166,4 +165,22 @@ function editRow(button, index) {
 function deleteRow(index) {
     currentData.splice(index, 1); // Elimina la fila del array
     displayData(currentData); // Recarga la tabla con los datos actualizados
+}
+
+// Función para descargar en Excel
+function downloadExcel() {
+    let wb = XLSX.utils.book_new();
+    let ws = XLSX.utils.table_to_sheet(document.querySelector("table"));
+    XLSX.utils.book_append_sheet(wb, ws, "Datos");
+    XLSX.writeFile(wb, "Base_Datos.xlsx");
+}
+
+// Función para descargar en PDF
+function downloadPDF() {
+    let { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+
+    doc.text("Base de Datos", 10, 10);
+    doc.autoTable({ html: "table" });
+    doc.save("Base_Datos.pdf");
 }
