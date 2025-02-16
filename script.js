@@ -27,7 +27,9 @@ function updateButtonStyles(activeButton) {
 async function loadDatabase(file) {
     try {
         const response = await fetch(`BASES/${file}.json`);
-        if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`Error al cargar datos: ${response.status}`);
+        }
 
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
