@@ -65,13 +65,13 @@ function displayData(data) {
     data.forEach((item, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${item["Model"]?.trim() || "N/A"}</td>
-            <td>${item["Customer Name"]?.trim() || "N/A"}</td>
-            <td>${item["Territoy"]?.trim() || "N/A"}</td>
-            <td>${item["Address1"]?.trim() || "N/A"}</td>
-            <td>${item["City"]?.trim() || "N/A"}</td>
-            <td>${item["Date Sold"]?.trim() || "N/A"}</td>
-            <td>${item["Date Installed"]?.trim() || "N/A"}</td>
+            <td>${item["Model"]?.trim() || ""}</td>
+            <td>${item["Customer Name"]?.trim() || ""}</td>
+            <td>${item["Territoy"]?.trim() || ""}</td>
+            <td>${item["Address1"]?.trim() || ""}</td>
+            <td>${item["City"]?.trim() || ""}</td>
+            <td>${item["Date Sold"]?.trim() || ""}</td>
+            <td>${item["Date Installed"]?.trim() || ""}</td>
             <td>
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
