@@ -24,17 +24,20 @@ function updateButtonStyles(activeButton) {
     }
 }
 
+function clearTable() {
+    document.getElementById("table-body").innerHTML = "";
+}
+
 async function loadDatabase(file) {
     try {
+        clearTable(); // Limpia antes de cargar nuevos datos
+
         const response = await fetch(`BASES/${file}.json`);
-        if (!response.ok) {
-            throw new Error(`Error al cargar datos: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
 
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
 
-        // Obtener la clave del JSON
         const dataKey = Object.keys(jsonData)[0];
         currentData = jsonData[dataKey];
 
@@ -44,9 +47,8 @@ async function loadDatabase(file) {
 
         console.log(`Cantidad de registros en ${file}: ${currentData.length}`);
         displayData(currentData);
-        populateFilters(currentData); // Llenar los filtros
+        populateFilters(currentData);
 
-        // Actualizar estilos de los botones según la base seleccionada
         updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
@@ -63,13 +65,13 @@ function displayData(data) {
     data.forEach((item, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td contenteditable="false">${item["Model"] || "N/A"}</td>
-            <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
-            <td contenteditable="false">${item["Territoy"] || "N/A"}</td>
-            <td contenteditable="false">${item["Address1"] || "N/A"}</td>
-            <td contenteditable="false">${item["City"] || "N/A"}</td>
-            <td contenteditable="false">${item["Date Sold"] || "N/A"}</td>
-            <td contenteditable="false">${item["Date Installed"] || "N/A"}</td>
+            <td>${item["Model"]?.trim() || "N/A"}</td>
+            <td>${item["Customer Name"]?.trim() || "N/A"}</td>
+            <td>${item["Territoy"]?.trim() || "N/A"}</td>
+            <td>${item["Address1"]?.trim() || "N/A"}</td>
+            <td>${item["City"]?.trim() || "N/A"}</td>
+            <td>${item["Date Sold"]?.trim() || "N/A"}</td>
+            <td>${item["Date Installed"]?.trim() || "N/A"}</td>
             <td>
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
