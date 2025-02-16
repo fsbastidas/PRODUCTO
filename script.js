@@ -24,11 +24,10 @@ function updateButtonStyles(activeButton) {
     }
 }
 
-// Cargar datos de la base de datos
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/{file}.json`);
-        if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
+        const response = await fetch(BASES/${file}.json);
+        if (!response.ok) throw new Error(Error al cargar datos: ${response.status});
 
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
@@ -41,45 +40,47 @@ async function loadDatabase(file) {
             throw new Error("El formato de datos no es un array válido");
         }
 
-        console.log(`Cantidad de registros en ${file}:`, currentData.length);
+        console.log(Cantidad de registros en ${file}:, currentData.length);
         displayData(currentData);
-        populateFilters(currentData);
+        populateFilters(currentData); // Llenar los filtros
 
+        // Actualizar estilos de los botones según la base seleccionada
         updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
     }
 }
 
-// Mostrar los datos en la tabla
+// Función para mostrar los datos en la tabla
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
     const recordCount = document.getElementById("record-count");
 
-    tableBody.innerHTML = "";
+    tableBody.innerHTML = ""; // Limpia la tabla antes de agregar datos
 
     data.forEach((item, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${item["Model"] || "N/A"}</td>
-            <td>${item["Customer Name"] || "N/A"}</td>
-            <td>${item["Territoy"] || "N/A"}</td>
-            <td>${item["Address1"] || "N/A"}</td>
-            <td>${item["City"] || "N/A"}</td>
-            <td>${item["Date Sold"] || "N/A"}</td>
-            <td>${item["Date Installed"] || "N/A"}</td>
+        row.innerHTML = 
+            <td contenteditable="false">${item["Model"] || "N/A"}</td>
+            <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
+            <td contenteditable="false">${item["Territoy"] || "N/A"}</td>
+            <td contenteditable="false">${item["Address1"] || "N/A"}</td>
+            <td contenteditable="false">${item["City"] || "N/A"}</td>
+            <td contenteditable="false">${item["Date Sold"] || "N/A"}</td>
+            <td contenteditable="false">${item["Date Installed"] || "N/A"}</td>
             <td>
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
             </td>
-        `;
+        ;
         tableBody.appendChild(row);
     });
 
+    // Actualiza la cantidad de registros en el recuadro
     recordCount.textContent = data.length;
 }
 
-// Llenar los filtros
+// Función para llenar los filtros con valores únicos
 function populateFilters(data) {
     const filters = {
         "filter-model": "Model",
@@ -92,7 +93,7 @@ function populateFilters(data) {
 
     Object.keys(filters).forEach(filterId => {
         const select = document.getElementById(filterId);
-        select.innerHTML = '<option value="">Todos</option>';
+        select.innerHTML = '<option value="">Todos</option>'; // Resetear opciones
 
         const uniqueValues = [...new Set(data.map(item => item[filters[filterId]]))].sort();
         uniqueValues.forEach(value => {
@@ -106,7 +107,7 @@ function populateFilters(data) {
     });
 }
 
-// Filtrar la tabla
+// Función para filtrar los datos en la tabla
 function filterTable() {
     const modelFilter = document.getElementById("filter-model").value;
     const clientFilter = document.getElementById("filter-client").value;
@@ -127,4 +128,38 @@ function filterTable() {
     });
 
     displayData(filteredData);
+}
+
+// Función para habilitar la edición de la fila
+function editRow(button, index) {
+    const row = button.parentNode.parentNode;
+    const cells = row.querySelectorAll("td");
+
+    if (button.textContent === "Editar") {
+        // Habilitar edición
+        cells.forEach((cell, i) => {
+            if (i < cells.length - 1) {
+                cell.contentEditable = true;
+                cell.style.backgroundColor = "#ffffcc"; // Color amarillo para resaltar edición
+            }
+        });
+        button.textContent = "Guardar";
+    } else {
+        // Guardar cambios
+        cells.forEach((cell, i) => {
+            if (i < cells.length - 1) {
+                currentData[index][Object.keys(currentData[index])[i]] = cell.textContent;
+                cell.contentEditable = false;
+                cell.style.backgroundColor = ""; // Restaurar color
+            }
+        });
+        button.textContent = "Editar";
+        console.log("Datos actualizados:", currentData[index]); // Mostrar cambios en consola
+    }
+}
+
+// Función para eliminar una fila de la tabla
+function deleteRow(index) {
+    currentData.splice(index, 1); // Elimina la fila del array
+    displayData(currentData); // Recarga la tabla con los datos actualizados
 }
