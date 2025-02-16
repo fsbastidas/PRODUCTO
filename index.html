@@ -33,6 +33,18 @@
         <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
     </div>
 
+    <!-- Formulario para agregar nueva fila -->
+    <div class="add-form">
+        <input type="text" id="new-model" placeholder="Modelo">
+        <input type="text" id="new-client" placeholder="Cliente">
+        <input type="text" id="new-territory" placeholder="Territorio">
+        <input type="text" id="new-address" placeholder="Dirección">
+        <input type="text" id="new-city" placeholder="Ciudad">
+        <input type="date" id="new-date-sold">
+        <input type="date" id="new-date-installed">
+        <button onclick="addRow()">➕ Agregar</button>
+    </div>
+
     <!-- Dropdowns de filtros -->
     <div class="filters">
         <label>Modelo:
