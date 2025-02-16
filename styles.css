@@ -98,3 +98,30 @@ thead tr {
     display: block;
 }
 
+/* Estilos para el formulario de agregar fila */
+.add-form {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.add-form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.add-form button {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-form button:hover {
+    background-color: #218838;
+}
