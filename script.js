@@ -42,7 +42,7 @@ async function loadDatabase(file) {
             throw new Error("El formato de datos no es un array válido");
         }
 
-        console.log(Cantidad de registros en ${file}:, currentData.length);
+        console.log(`Cantidad de registros en ${file}: ${currentData.length}`);
         displayData(currentData);
         populateFilters(currentData); // Llenar los filtros
 
