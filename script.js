@@ -186,41 +186,37 @@ function downloadPDF() {
     doc.save("Base_Datos.pdf");
 }
 
+// Mostrar / Ocultar el formulario de agregar fila
+document.getElementById("toggleAddForm").addEventListener("click", function () {
+    let form = document.getElementById("addForm");
+    form.style.display = form.style.display === "none" ? "flex" : "none";
+});
+
 // Función para agregar una nueva fila a la tabla
 function addRow() {
-    const model = document.getElementById("new-model").value.trim();
-    const client = document.getElementById("new-client").value.trim();
-    const territory = document.getElementById("new-territory").value.trim();
-    const address = document.getElementById("new-address").value.trim();
-    const city = document.getElementById("new-city").value.trim();
-    const dateSold = document.getElementById("new-date-sold").value;
-    const dateInstalled = document.getElementById("new-date-installed").value;
-
-    if (!model || !client || !territory || !address || !city) {
-        alert("Por favor, completa todos los campos.");
-        return;
-    }
-
-    const newRow = {
-        "Model": model,
-        "Customer Name": client,
-        "Territoy": territory,
-        "Address1": address,
-        "City": city,
-        "Date Sold": dateSold || "N/A",
-        "Date Installed": dateInstalled || "N/A"
+    let newRow = {
+        "Model": document.getElementById("newModel").value.trim(),
+        "Customer Name": document.getElementById("newClient").value.trim(),
+        "Territoy": document.getElementById("newTerritoy").value.trim(),
+        "Address1": document.getElementById("newAddress").value.trim(),
+        "City": document.getElementById("newCity").value.trim(),
+        "Date Sold": document.getElementById("newDateSold").value || "N/A",
+        "Date Installed": document.getElementById("newDateInstalled").value || "N/A"
     };
 
+    // Agregar al array de datos actuales
     currentData.push(newRow);
     displayData(currentData);
-    
-    // Limpiar los campos del formulario
-    document.getElementById("new-model").value = "";
-    document.getElementById("new-client").value = "";
-    document.getElementById("new-territory").value = "";
-    document.getElementById("new-address").value = "";
-    document.getElementById("new-city").value = "";
-    document.getElementById("new-date-sold").value = "";
-    document.getElementById("new-date-installed").value = "";
-}
 
+    // Limpiar los campos
+    document.getElementById("newModel").value = "";
+    document.getElementById("newClient").value = "";
+    document.getElementById("newTerritoy").value = "";
+    document.getElementById("newAddress").value = "";
+    document.getElementById("newCity").value = "";
+    document.getElementById("newDateSold").value = "";
+    document.getElementById("newDateInstalled").value = "";
+
+    // Ocultar el formulario después de agregar
+    document.getElementById("addForm").style.display = "none";
+}
