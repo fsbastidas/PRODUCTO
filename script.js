@@ -1,5 +1,33 @@
 let currentData = []; // Guardar datos actuales para modificar y filtrar
 
+document.getElementById("add-row-btn").addEventListener("click", function() {
+    document.getElementById("add-row-form").classList.remove("hidden");
+});
+
+// Función para cancelar la adición de una fila
+function cancelAddRow() {
+    document.getElementById("add-row-form").classList.add("hidden");
+}
+
+// Función para agregar una nueva fila a la tabla
+function addRow() {
+    const newRow = {
+        "Model": document.getElementById("new-model").value.trim(),
+        "Customer Name": document.getElementById("new-client").value.trim(),
+        "Territoy": document.getElementById("new-territory").value.trim(),
+        "Address1": document.getElementById("new-address").value.trim(),
+        "City": document.getElementById("new-city").value.trim(),
+        "Date Sold": document.getElementById("new-date-sold").value,
+        "Date Installed": document.getElementById("new-date-installed").value
+    };
+
+    currentData.push(newRow);
+    displayData(currentData);
+    
+    // Ocultar formulario después de agregar
+    document.getElementById("add-row-form").classList.add("hidden");
+}
+
 // Función para actualizar el estado visual de los botones
 function updateButtonStyles(activeButton) {
     const btnLed = document.getElementById("btnLed");
@@ -24,7 +52,6 @@ function updateButtonStyles(activeButton) {
     }
 }
 
-// Función para limpiar la tabla antes de cargar datos nuevos
 function clearTable() {
     document.getElementById("table-body").innerHTML = "";
 }
@@ -32,7 +59,7 @@ function clearTable() {
 // Función para cargar la base de datos
 async function loadDatabase(file) {
     try {
-        clearTable(); // Limpia la tabla antes de cargar nuevos datos
+        clearTable(); // Limpia antes de cargar nuevos datos
 
         const response = await fetch(`BASES/${file}.json`);
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
@@ -43,11 +70,14 @@ async function loadDatabase(file) {
         const dataKey = Object.keys(jsonData)[0];
         currentData = jsonData[dataKey];
 
-        if (!Array.isArray(currentData)) throw new Error("El formato de datos no es válido");
+        if (!Array.isArray(currentData)) {
+            throw new Error("El formato de datos no es un array válido");
+        }
 
         console.log(`Cantidad de registros en ${file}: ${currentData.length}`);
         displayData(currentData);
         populateFilters(currentData);
+
         updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
     } catch (error) {
         console.error("No se pudieron cargar los datos:", error);
@@ -64,13 +94,13 @@ function displayData(data) {
     data.forEach((item, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${item["Model"]?.trim() || ""}</td>
-            <td>${item["Customer Name"]?.trim() || ""}</td>
-            <td>${item["Territoy"]?.trim() || ""}</td>
-            <td>${item["Address1"]?.trim() || ""}</td>
-            <td>${item["City"]?.trim() || ""}</td>
-            <td>${item["Date Sold"]?.trim() || ""}</td>
-            <td>${item["Date Installed"]?.trim() || ""}</td>
+            <td>${item["Model"] || "N/A"}</td>
+            <td>${item["Customer Name"] || "N/A"}</td>
+            <td>${item["Territoy"] || "N/A"}</td>
+            <td>${item["Address1"] || "N/A"}</td>
+            <td>${item["City"] || "N/A"}</td>
+            <td>${item["Date Sold"] || "N/A"}</td>
+            <td>${item["Date Installed"] || "N/A"}</td>
             <td>
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
@@ -81,6 +111,12 @@ function displayData(data) {
 
     // Actualiza la cantidad de registros en el recuadro
     recordCount.textContent = data.length;
+}
+
+// Función para eliminar una fila de la tabla
+function deleteRow(index) {
+    currentData.splice(index, 1);
+    displayData(currentData);
 }
 
 // Función para llenar los filtros con valores únicos
@@ -110,77 +146,22 @@ function populateFilters(data) {
     });
 }
 
-// Función para filtrar los datos en la tabla
-function filterTable() {
-    const modelFilter = document.getElementById("filter-model").value;
-    const clientFilter = document.getElementById("filter-client").value;
-    const cityFilter = document.getElementById("filter-city").value;
-    const territoyFilter = document.getElementById("filter-territoy").value;
-    const dateSoldFilter = document.getElementById("filter-date-sold").value;
-    const dateInstalledFilter = document.getElementById("filter-date-installed").value;
-
-    const filteredData = currentData.filter(item => {
-        return (
-            (modelFilter === "" || item["Model"] === modelFilter) &&
-            (clientFilter === "" || item["Customer Name"] === clientFilter) &&
-            (cityFilter === "" || item["City"] === cityFilter) &&
-            (territoyFilter === "" || item["Territoy"] === territoyFilter) &&
-            (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
-            (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
-        );
-    });
-
-    displayData(filteredData);
-}
-
-// Función para habilitar la edición de la fila
-function editRow(button, index) {
-    const row = button.parentNode.parentNode;
-    const cells = row.querySelectorAll("td");
-
-    if (button.textContent === "Editar") {
-        // Habilitar edición
-        cells.forEach((cell, i) => {
-            if (i < cells.length - 1) {
-                cell.contentEditable = true;
-                cell.style.backgroundColor = "#ffffcc"; // Color amarillo para resaltar edición
-            }
-        });
-        button.textContent = "Guardar";
-    } else {
-        // Guardar cambios
-        cells.forEach((cell, i) => {
-            if (i < cells.length - 1) {
-                currentData[index][Object.keys(currentData[index])[i]] = cell.textContent;
-                cell.contentEditable = false;
-                cell.style.backgroundColor = ""; // Restaurar color
-            }
-        });
-        button.textContent = "Editar";
-        console.log("Datos actualizados:", currentData[index]); // Mostrar cambios en consola
-    }
-}
-
-// Función para eliminar una fila de la tabla
-function deleteRow(index) {
-    currentData.splice(index, 1); // Elimina la fila del array
-    displayData(currentData); // Recarga la tabla con los datos actualizados
-}
-
 // Función para descargar en Excel
-function downloadExcel() {
-    let wb = XLSX.utils.book_new();
-    let ws = XLSX.utils.table_to_sheet(document.querySelector("table"));
-    XLSX.utils.book_append_sheet(wb, ws, "Datos");
-    XLSX.writeFile(wb, "Base_Datos.xlsx");
+function exportToExcel() {
+    let table = document.querySelector("table");
+    let wb = XLSX.utils.table_to_book(table, { sheet: "Base de Datos" });
+    XLSX.writeFile(wb, "base_datos.xlsx");
 }
 
 // Función para descargar en PDF
-function downloadPDF() {
-    let { jsPDF } = window.jspdf;
+function exportToPDF() {
     let doc = new jsPDF();
-
-    doc.text("Base de Datos", 10, 10);
     doc.autoTable({ html: "table" });
-    doc.save("Base_Datos.pdf");
+    doc.save("base_datos.pdf");
 }
+
+// Mostrar opciones de descarga
+document.getElementById("download-btn").addEventListener("click", function() {
+    let menu = document.getElementById("download-menu");
+    menu.classList.toggle("hidden");
+});
