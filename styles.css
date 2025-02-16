@@ -4,7 +4,7 @@ body {
     margin: 20px;
 }
 
-/* 📌 Contenedor de botones de acción */
+/* Contenedor de botones de acción */
 .top-actions {
     display: flex;
     justify-content: center;
@@ -12,7 +12,7 @@ body {
     margin-bottom: 15px;
 }
 
-/* 📌 Botón de descarga y menú desplegable */
+/* Botón de descarga y su menú */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -32,7 +32,7 @@ body {
     background-color: #0056b3;
 }
 
-/* 📌 Menú de descarga activado con clic */
+/* Estilo del menú de descarga */
 #download-menu {
     display: none;
     position: absolute;
@@ -40,16 +40,19 @@ body {
     border: 1px solid #ccc;
     padding: 5px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    right: 0;
     border-radius: 5px;
+    min-width: 150px;
 }
 
 #download-menu button {
     display: block;
     width: 100%;
     margin: 2px 0;
-    padding: 8px;
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
     border: none;
+    padding: 10px;
+    text-align: left;
     cursor: pointer;
 }
 
@@ -57,17 +60,38 @@ body {
     background-color: #ddd;
 }
 
-/* 📌 Mostrar menú cuando está activo */
+/* Mostrar menú al hacer clic */
 #download-menu.visible {
     display: block;
 }
 
-/* 📌 Formulario oculto de "Agregar Fila" */
+/* Filtros en la parte superior */
+.filters {
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filters label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+}
+
+.filters select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Formulario oculto de "Agregar Fila" */
 .hidden {
     display: none;
 }
 
-/* 📌 Estilo general de botones */
+/* Estilo general de botones */
 button {
     padding: 10px;
     margin: 5px;
@@ -88,7 +112,6 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* 📌 Tabla */
 table {
     width: 90%;
     margin: 20px auto;
@@ -101,19 +124,9 @@ th, td {
     text-align: left;
 }
 
-/* 📌 Resaltado de la fila de encabezado */
+/* Fila de encabezado en color celeste */
 thead tr {
-    background-color: #d4f1f9; /* Celeste claro */
+    background-color: #d4f1f9;
     font-weight: bold;
-}
-
-/* 📌 Estilo para el recuadro de cantidad de filas */
-#data-info {
-    margin: 10px auto;
-    padding: 10px;
-    width: 200px;
-    border: 2px solid #007BFF;
-    border-radius: 5px;
-    background-color: #f1f1f1;
 }
 
