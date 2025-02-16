@@ -11,10 +11,8 @@
     <h1>BASE AREA PRODUCTO</h1>
 
     <!-- Botones para cargar las bases de datos -->
-    <div class="button-group">
-        <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
-        <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
-    </div>
+    <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
+    <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
 
     <!-- Recuadro para mostrar la cantidad de filas -->
     <div id="data-info">
@@ -28,26 +26,31 @@
                 <option value="">Todos</option>
             </select>
         </label>
+
         <label>Cliente:
             <select id="filter-client" onchange="filterTable()">
                 <option value="">Todos</option>
             </select>
         </label>
+
         <label>Territorio:
             <select id="filter-territoy" onchange="filterTable()">
                 <option value="">Todos</option>
             </select>
         </label>
+
         <label>Ciudad:
             <select id="filter-city" onchange="filterTable()">
                 <option value="">Todos</option>
             </select>
         </label>
+
         <label>Fecha de Venta:
             <select id="filter-date-sold" onchange="filterTable()">
                 <option value="">Todas</option>
             </select>
         </label>
+
         <label>Fecha de Instalación:
             <select id="filter-date-installed" onchange="filterTable()">
                 <option value="">Todas</option>
@@ -73,5 +76,3 @@
     </table>
 </body>
 </html>
-
-
