@@ -4,6 +4,70 @@ body {
     margin: 20px;
 }
 
+/* 📌 Contenedor de botones de acción */
+.top-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* 📌 Botón de descarga y menú desplegable */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dropbtn:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Menú de descarga activado con clic */
+#download-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+#download-menu button {
+    display: block;
+    width: 100%;
+    margin: 2px 0;
+    padding: 8px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+}
+
+#download-menu button:hover {
+    background-color: #ddd;
+}
+
+/* 📌 Mostrar menú cuando está activo */
+#download-menu.visible {
+    display: block;
+}
+
+/* 📌 Formulario oculto de "Agregar Fila" */
+.hidden {
+    display: none;
+}
+
+/* 📌 Estilo general de botones */
 button {
     padding: 10px;
     margin: 5px;
@@ -24,6 +88,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
+/* 📌 Tabla */
 table {
     width: 90%;
     margin: 20px auto;
@@ -36,13 +101,13 @@ th, td {
     text-align: left;
 }
 
-/* Resaltado de la fila de encabezado */
+/* 📌 Resaltado de la fila de encabezado */
 thead tr {
     background-color: #d4f1f9; /* Celeste claro */
     font-weight: bold;
 }
 
-/* Estilo para el recuadro de cantidad de filas */
+/* 📌 Estilo para el recuadro de cantidad de filas */
 #data-info {
     margin: 10px auto;
     padding: 10px;
@@ -52,48 +117,3 @@ thead tr {
     background-color: #f1f1f1;
 }
 
-/* Botón de descarga y menú desplegable */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropbtn {
-    background-color: #007BFF;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.dropbtn:hover {
-    background-color: #0056b3;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 150px;
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    border-radius: 5px;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #ddd;
-}
-
-/* Mostrar el menú al pasar el mouse */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
