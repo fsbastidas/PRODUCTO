@@ -185,3 +185,42 @@ function downloadPDF() {
     doc.autoTable({ html: "table" });
     doc.save("Base_Datos.pdf");
 }
+
+// Función para agregar una nueva fila a la tabla
+function addRow() {
+    const model = document.getElementById("new-model").value.trim();
+    const client = document.getElementById("new-client").value.trim();
+    const territory = document.getElementById("new-territory").value.trim();
+    const address = document.getElementById("new-address").value.trim();
+    const city = document.getElementById("new-city").value.trim();
+    const dateSold = document.getElementById("new-date-sold").value;
+    const dateInstalled = document.getElementById("new-date-installed").value;
+
+    if (!model || !client || !territory || !address || !city) {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
+
+    const newRow = {
+        "Model": model,
+        "Customer Name": client,
+        "Territoy": territory,
+        "Address1": address,
+        "City": city,
+        "Date Sold": dateSold || "N/A",
+        "Date Installed": dateInstalled || "N/A"
+    };
+
+    currentData.push(newRow);
+    displayData(currentData);
+    
+    // Limpiar los campos del formulario
+    document.getElementById("new-model").value = "";
+    document.getElementById("new-client").value = "";
+    document.getElementById("new-territory").value = "";
+    document.getElementById("new-address").value = "";
+    document.getElementById("new-city").value = "";
+    document.getElementById("new-date-sold").value = "";
+    document.getElementById("new-date-installed").value = "";
+}
+
