@@ -18,9 +18,10 @@ button:hover {
     background-color: #0056b3;
 }
 
-button.active {
-    background-color: #28a745;
-    color: white;
+button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
 }
 
 table {
@@ -33,5 +34,20 @@ th, td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
+}
+
+/* Estilo para el recuadro de cantidad de filas */
+#data-info {
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+}
+
+/* Resaltado de celdas editables */
+td[contenteditable="true"] {
+    background-color: #ffffcc;
 }
 
