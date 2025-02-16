@@ -27,7 +27,7 @@ function updateButtonStyles(activeButton) {
 // Cargar datos de la base de datos
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${file}.json`);
+        const response = await fetch(`BASES/{file}.json`);
         if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
 
         const jsonData = await response.json();
