@@ -1,5 +1,6 @@
 let currentData = []; // Guardar datos actuales para modificar y filtrar
 
+// Evento para mostrar el formulario de agregar fila
 document.getElementById("add-row-btn").addEventListener("click", function() {
     document.getElementById("add-row-form").classList.remove("hidden");
 });
@@ -14,7 +15,7 @@ function addRow() {
     const newRow = {
         "Model": document.getElementById("new-model").value.trim(),
         "Customer Name": document.getElementById("new-client").value.trim(),
-        "Territoy": document.getElementById("new-territoy").value.trim(),
+        "Territoy": document.getElementById("new-territory").value.trim(),
         "Address1": document.getElementById("new-address").value.trim(),
         "City": document.getElementById("new-city").value.trim(),
         "Date Sold": document.getElementById("new-date-sold").value,
@@ -111,6 +112,34 @@ function displayData(data) {
 
     // Actualiza la cantidad de registros en el recuadro
     recordCount.textContent = data.length;
+}
+
+// Función para editar una fila
+function editRow(button, index) {
+    const row = button.parentNode.parentNode;
+    const cells = row.querySelectorAll("td");
+
+    if (button.textContent === "Editar") {
+        // Habilitar edición
+        cells.forEach((cell, i) => {
+            if (i < cells.length - 1) {
+                cell.contentEditable = true;
+                cell.style.backgroundColor = "#ffffcc"; // Color amarillo para resaltar edición
+            }
+        });
+        button.textContent = "Guardar";
+    } else {
+        // Guardar cambios
+        cells.forEach((cell, i) => {
+            if (i < cells.length - 1) {
+                currentData[index][Object.keys(currentData[index])[i]] = cell.textContent;
+                cell.contentEditable = false;
+                cell.style.backgroundColor = ""; // Restaurar color
+            }
+        });
+        button.textContent = "Editar";
+        console.log("Datos actualizados:", currentData[index]); // Mostrar cambios en consola
+    }
 }
 
 // Función para eliminar una fila de la tabla
