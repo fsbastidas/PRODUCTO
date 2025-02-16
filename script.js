@@ -14,7 +14,7 @@ function addRow() {
     const newRow = {
         "Model": document.getElementById("new-model").value.trim(),
         "Customer Name": document.getElementById("new-client").value.trim(),
-        "Territoy": document.getElementById("new-territory").value.trim(),
+        "Territoy": document.getElementById("new-territoy").value.trim(),
         "Address1": document.getElementById("new-address").value.trim(),
         "City": document.getElementById("new-city").value.trim(),
         "Date Sold": document.getElementById("new-date-sold").value,
