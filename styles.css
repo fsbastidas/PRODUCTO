@@ -51,9 +51,9 @@ td[contenteditable="true"] {
     background-color: #ffffcc;
 }
 
-/* Primera fila con color celeste claro */
-tbody tr:
-{
+/* Fila de encabezado con color celeste claro */
+thead tr {
     background-color: #d4f1f9; /* Celeste claro */
-    font-weight: bold; /* Opcional: Resaltar en negrita */
+    font-weight: bold;
 }
+
