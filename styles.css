@@ -4,7 +4,7 @@ body {
     margin: 20px;
 }
 
-/* Contenedor de botones de acción */
+/* 📌 Contenedor de botones de acción */
 .top-actions {
     display: flex;
     justify-content: center;
@@ -12,7 +12,27 @@ body {
     margin-bottom: 15px;
 }
 
-/* Estilo del menú de descarga */
+/* 📌 Botón de descarga y menú desplegable */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dropbtn:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Menú de descarga activado con clic */
 #download-menu {
     display: none;
     position: absolute;
@@ -20,24 +40,34 @@ body {
     border: 1px solid #ccc;
     padding: 5px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
 }
 
 #download-menu button {
     display: block;
     width: 100%;
     margin: 2px 0;
+    padding: 8px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
 }
 
-/* Mostrar menú cuando se activa */
+#download-menu button:hover {
+    background-color: #ddd;
+}
+
+/* 📌 Mostrar menú cuando está activo */
 #download-menu.visible {
     display: block;
 }
 
-/* Formulario oculto de "Agregar Fila" */
+/* 📌 Formulario oculto de "Agregar Fila" */
 .hidden {
     display: none;
 }
 
+/* 📌 Estilo general de botones */
 button {
     padding: 10px;
     margin: 5px;
@@ -58,6 +88,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
+/* 📌 Tabla */
 table {
     width: 90%;
     margin: 20px auto;
@@ -70,8 +101,18 @@ th, td {
     text-align: left;
 }
 
-/* Fila de encabezado en color celeste */
+/* 📌 Resaltado de la fila de encabezado */
 thead tr {
-    background-color: #d4f1f9;
+    background-color: #d4f1f9; /* Celeste claro */
     font-weight: bold;
+}
+
+/* 📌 Estilo para el recuadro de cantidad de filas */
+#data-info {
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    background-color: #f1f1f1;
 }
