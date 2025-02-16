@@ -1,4 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BASE AREA PRODUCTO</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <h1>BASE AREA PRODUCTO</h1>
 
+    <!-- Botones para cargar las bases de datos -->
+    <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
+    <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
+
+    <!-- Recuadro para mostrar la cantidad de filas -->
+    <div id="data-info">
+        <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
+    </div>
+
+    <!-- Dropdowns de filtros -->
+    <div class="filters">
+        <label>Modelo:
+            <select id="filter-model" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
+
+        <label>Cliente:
+            <select id="filter-client" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
+
+        <label>Territorio:
+            <select id="filter-territoy" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
+
+        <label>Ciudad:
+            <select id="filter-city" onchange="filterTable()">
+                <option value="">Todos</option>
+            </select>
+        </label>
+
+        <label>Fecha de Venta:
+            <select id="filter-date-sold" onchange="filterTable()">
+                <option value="">Todas</option>
+            </select>
+        </label>
+
+        <label>Fecha de Instalación:
+            <select id="filter-date-installed" onchange="filterTable()">
+                <option value="">Todas</option>
+            </select>
+        </label>
+    </div>
+
+    <!-- Tabla -->
+    <table>
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Cliente</th>
+                <th>Territorio</th>
+                <th>Dirección</th>
+                <th>Ciudad</th>
+                <th>Fecha de Venta</th>
+                <th>Fecha de Instalación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
         <tbody id="table-body"></tbody>
     </table>
 </body>
