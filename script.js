@@ -6,18 +6,28 @@ function updateButtonStyles(activeButton) {
     const btnXenon = document.getElementById("btnXenon");
 
     if (activeButton === "LED") {
-        btnLed.classList.add("active");
-        btnXenon.classList.remove("active");
+        btnLed.style.backgroundColor = "#28a745"; // Verde activo
+        btnLed.style.color = "white";
+        btnLed.disabled = true;
+
+        btnXenon.style.backgroundColor = "#ccc"; // Apagado
+        btnXenon.style.color = "#666";
+        btnXenon.disabled = false;
     } else {
-        btnXenon.classList.add("active");
-        btnLed.classList.remove("active");
+        btnXenon.style.backgroundColor = "#28a745"; // Verde activo
+        btnXenon.style.color = "white";
+        btnXenon.disabled = true;
+
+        btnLed.style.backgroundColor = "#ccc"; // Apagado
+        btnLed.style.color = "#666";
+        btnLed.disabled = false;
     }
 }
 
 async function loadDatabase(file) {
     try {
-        const response = await fetch(`BASES/${file}.json`);
-        if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
+        const response = await fetch(BASES/${file}.json);
+        if (!response.ok) throw new Error(Error al cargar datos: ${response.status});
 
         const jsonData = await response.json();
         console.log("Datos cargados:", jsonData);
@@ -30,9 +40,9 @@ async function loadDatabase(file) {
             throw new Error("El formato de datos no es un array válido");
         }
 
-        console.log(`Cantidad de registros en ${file}:`, currentData.length);
+        console.log(Cantidad de registros en ${file}:, currentData.length);
         displayData(currentData);
-        populateFilters(currentData);
+        populateFilters(currentData); // Llenar los filtros
 
         // Actualizar estilos de los botones según la base seleccionada
         updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
@@ -50,19 +60,19 @@ function displayData(data) {
 
     data.forEach((item, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${item["Model"] || "N/A"}</td>
-            <td>${item["Customer Name"] || "N/A"}</td>
-            <td>${item["Territoy"] || "N/A"}</td>
-            <td>${item["Address1"] || "N/A"}</td>
-            <td>${item["City"] || "N/A"}</td>
-            <td>${item["Date Sold"] || "N/A"}</td>
-            <td>${item["Date Installed"] || "N/A"}</td>
+        row.innerHTML = 
+            <td contenteditable="false">${item["Model"] || "N/A"}</td>
+            <td contenteditable="false">${item["Customer Name"] || "N/A"}</td>
+            <td contenteditable="false">${item["Territoy"] || "N/A"}</td>
+            <td contenteditable="false">${item["Address1"] || "N/A"}</td>
+            <td contenteditable="false">${item["City"] || "N/A"}</td>
+            <td contenteditable="false">${item["Date Sold"] || "N/A"}</td>
+            <td contenteditable="false">${item["Date Installed"] || "N/A"}</td>
             <td>
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
             </td>
-        `;
+        ;
         tableBody.appendChild(row);
     });
 
@@ -70,13 +80,7 @@ function displayData(data) {
     recordCount.textContent = data.length;
 }
 
-// Función para eliminar una fila de la tabla
-function deleteRow(index) {
-    currentData.splice(index, 1);
-    displayData(currentData);
-}
-
-// Función para llenar los filtros
+// Función para llenar los filtros con valores únicos
 function populateFilters(data) {
     const filters = {
         "filter-model": "Model",
@@ -89,7 +93,7 @@ function populateFilters(data) {
 
     Object.keys(filters).forEach(filterId => {
         const select = document.getElementById(filterId);
-        select.innerHTML = '<option value="">Todos</option>';
+        select.innerHTML = '<option value="">Todos</option>'; // Resetear opciones
 
         const uniqueValues = [...new Set(data.map(item => item[filters[filterId]]))].sort();
         uniqueValues.forEach(value => {
@@ -101,4 +105,61 @@ function populateFilters(data) {
             }
         });
     });
+}
+
+// Función para filtrar los datos en la tabla
+function filterTable() {
+    const modelFilter = document.getElementById("filter-model").value;
+    const clientFilter = document.getElementById("filter-client").value;
+    const cityFilter = document.getElementById("filter-city").value;
+    const territoyFilter = document.getElementById("filter-territoy").value;
+    const dateSoldFilter = document.getElementById("filter-date-sold").value;
+    const dateInstalledFilter = document.getElementById("filter-date-installed").value;
+
+    const filteredData = currentData.filter(item => {
+        return (
+            (modelFilter === "" || item["Model"] === modelFilter) &&
+            (clientFilter === "" || item["Customer Name"] === clientFilter) &&
+            (cityFilter === "" || item["City"] === cityFilter) &&
+            (territoyFilter === "" || item["Territoy"] === territoyFilter) &&
+            (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
+            (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
+        );
+    });
+
+    displayData(filteredData);
+}
+
+// Función para habilitar la edición de la fila
+function editRow(button, index) {
+    const row = button.parentNode.parentNode;
+    const cells = row.querySelectorAll("td");
+
+    if (button.textContent === "Editar") {
+        // Habilitar edición
+        cells.forEach((cell, i) => {
+            if (i < cells.length - 1) {
+                cell.contentEditable = true;
+                cell.style.backgroundColor = "#ffffcc"; // Color amarillo para resaltar edición
+            }
+        });
+        button.textContent = "Guardar";
+    } else {
+        // Guardar cambios
+        cells.forEach((cell, i) => {
+            if (i < cells.length - 1) {
+                currentData[index][Object.keys(currentData[index])[i]] = cell.textContent;
+                cell.contentEditable = false;
+                cell.style.backgroundColor = ""; // Restaurar color
+            }
+        });
+        button.textContent = "Editar";
+        console.log("Datos actualizados:", currentData[index]); // Mostrar cambios en consola
+    }
+}
+
+// Función para eliminar una fila de la tabla
+function deleteRow(index) {
+    currentData.splice(index, 1); // Elimina la fila del array
+    displayData(currentData); // Recarga la tabla con los datos actualizados
 }
