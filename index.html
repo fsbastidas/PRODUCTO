@@ -6,7 +6,6 @@
     <title>BASE AREA PRODUCTO</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
-
     <!-- Librerías para exportar Excel y PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -33,16 +32,19 @@
         <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
     </div>
 
-    <!-- Formulario para agregar nueva fila -->
-    <div class="add-form">
-        <input type="text" id="new-model" placeholder="Modelo">
-        <input type="text" id="new-client" placeholder="Cliente">
-        <input type="text" id="new-territory" placeholder="Territorio">
-        <input type="text" id="new-address" placeholder="Dirección">
-        <input type="text" id="new-city" placeholder="Ciudad">
-        <input type="date" id="new-date-sold">
-        <input type="date" id="new-date-installed">
-        <button onclick="addRow()">➕ Agregar</button>
+    <!-- Botón para mostrar el formulario de agregar -->
+    <button id="toggleAddForm" class="add-btn">➕ Agregar</button>
+
+    <!-- Formulario oculto para agregar una nueva fila -->
+    <div id="addForm" class="add-form" style="display: none;">
+        <input type="text" id="newModel" placeholder="Modelo">
+        <input type="text" id="newClient" placeholder="Cliente">
+        <input type="text" id="newTerritoy" placeholder="Territorio">
+        <input type="text" id="newAddress" placeholder="Dirección">
+        <input type="text" id="newCity" placeholder="Ciudad">
+        <input type="date" id="newDateSold">
+        <input type="date" id="newDateInstalled">
+        <button onclick="addRow()">✅ Guardar</button>
     </div>
 
     <!-- Dropdowns de filtros -->
