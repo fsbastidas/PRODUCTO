@@ -6,58 +6,68 @@
     <title>BASE AREA PRODUCTO</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Librerías para exportar Excel y PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <h1>BASE AREA PRODUCTO</h1>
 
-    <div class="top-actions">
-        <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
-        <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
+    <!-- Botones para cargar las bases de datos -->
+    <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
+    <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
 
-        <div class="dropdown">
-            <button id="download-btn" class="dropbtn">⬇ Descargar</button>
-            <div id="download-menu" class="dropdown-content">
-                <button onclick="exportToExcel()">📄 Excel</button>
-                <button onclick="exportToPDF()">📜 PDF</button>
-            </div>
+    <!-- Botón de descarga con menú desplegable -->
+    <div class="dropdown">
+        <button class="dropbtn">⬇️</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="downloadExcel()">📂 Descargar Excel</a>
+            <a href="#" onclick="downloadPDF()">📄 Descargar PDF</a>
         </div>
-
-        <button id="add-row-btn">➕ Agregar Fila</button>
     </div>
 
+    <!-- Recuadro para mostrar la cantidad de filas -->
     <div id="data-info">
         <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
     </div>
 
+    <!-- Dropdowns de filtros -->
     <div class="filters">
         <label>Modelo:
             <select id="filter-model" onchange="filterTable()">
                 <option value="">Todos</option>
             </select>
         </label>
-
         <label>Cliente:
             <select id="filter-client" onchange="filterTable()">
                 <option value="">Todos</option>
             </select>
         </label>
-
         <label>Territorio:
             <select id="filter-territoy" onchange="filterTable()">
                 <option value="">Todos</option>
             </select>
         </label>
-
         <label>Ciudad:
             <select id="filter-city" onchange="filterTable()">
                 <option value="">Todos</option>
             </select>
         </label>
+        <label>Fecha de Venta:
+            <select id="filter-date-sold" onchange="filterTable()">
+                <option value="">Todas</option>
+            </select>
+        </label>
+        <label>Fecha de Instalación:
+            <select id="filter-date-installed" onchange="filterTable()">
+                <option value="">Todas</option>
+            </select>
+        </label>
     </div>
 
+    <!-- Tabla -->
     <table>
         <thead>
             <tr>
@@ -73,20 +83,5 @@
         </thead>
         <tbody id="table-body"></tbody>
     </table>
-
-    <!-- Formulario para agregar una fila -->
-    <div id="add-row-form" class="hidden">
-        <input type="text" id="new-model" placeholder="Modelo">
-        <input type="text" id="new-client" placeholder="Cliente">
-        <input type="text" id="new-territoy" placeholder="Territorio">
-        <input type="text" id="new-address" placeholder="Dirección">
-        <input type="text" id="new-city" placeholder="Ciudad">
-        <input type="date" id="new-date-sold">
-        <input type="date" id="new-date-installed">
-        <button onclick="addRow()">✅ Guardar</button>
-        <button onclick="cancelAddRow()">❌ Cancelar</button>
-    </div>
-
 </body>
 </html>
-
