@@ -6,56 +6,47 @@
     <title>BASE AREA PRODUCTO</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
+
+    <!-- Librerías para exportar a Excel y PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <h1>BASE AREA PRODUCTO</h1>
 
-    <!-- Botones para cargar las bases de datos -->
+    <!-- Botones de Acción -->
+    <div class="top-actions">
+        <button id="add-row-btn">➕ Agregar Fila</button>
+        <button id="download-btn">⬇️ Descargar</button>
+
+        <!-- Opciones de descarga -->
+        <div id="download-menu" class="hidden">
+            <button onclick="exportToExcel()">📄 Excel</button>
+            <button onclick="exportToPDF()">📜 PDF</button>
+        </div>
+    </div>
+
+    <!-- Formulario de nueva fila -->
+    <div id="add-row-form" class="hidden">
+        <input type="text" id="new-model" placeholder="Modelo">
+        <input type="text" id="new-client" placeholder="Cliente">
+        <input type="text" id="new-territoy" placeholder="Territorio">
+        <input type="text" id="new-address" placeholder="Dirección">
+        <input type="text" id="new-city" placeholder="Ciudad">
+        <input type="date" id="new-date-sold">
+        <input type="date" id="new-date-installed">
+        <button onclick="addRow()">✅ Guardar</button>
+        <button onclick="cancelAddRow()">❌ Cancelar</button>
+    </div>
+
+    <!-- Botones para cargar bases de datos -->
     <button onclick="loadDatabase('BASE_FUJI_LED')" id="btnLed">📟 Ver Base FUJI LED</button>
     <button onclick="loadDatabase('BASE_FUJI_XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button>
 
-    <!-- Recuadro para mostrar la cantidad de filas -->
+    <!-- Recuadro para cantidad de registros -->
     <div id="data-info">
         <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
-    </div>
-
-    <!-- Dropdowns de filtros -->
-    <div class="filters">
-        <label>Modelo:
-            <select id="filter-model" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-
-        <label>Cliente:
-            <select id="filter-client" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-
-        <label>Territorio:
-            <select id="filter-territoy" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-
-        <label>Ciudad:
-            <select id="filter-city" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-
-        <label>Fecha de Venta:
-            <select id="filter-date-sold" onchange="filterTable()">
-                <option value="">Todas</option>
-            </select>
-        </label>
-
-        <label>Fecha de Instalación:
-            <select id="filter-date-installed" onchange="filterTable()">
-                <option value="">Todas</option>
-            </select>
-        </label>
     </div>
 
     <!-- Tabla -->
@@ -74,21 +65,5 @@
         </thead>
         <tbody id="table-body"></tbody>
     </table>
-
-    <!-- Botón para agregar fila -->
-    <button id="add-row-btn">➕ Agregar Fila</button>
-
-    <!-- Formulario para agregar nueva fila -->
-    <div id="add-row-form" class="hidden">
-        <input type="text" id="new-model" placeholder="Modelo">
-        <input type="text" id="new-client" placeholder="Cliente">
-        <input type="text" id="new-territory" placeholder="Territorio">
-        <input type="text" id="new-address" placeholder="Dirección">
-        <input type="text" id="new-city" placeholder="Ciudad">
-        <input type="date" id="new-date-sold">
-        <input type="date" id="new-date-installed">
-        <button onclick="addRow()">✅ Guardar</button>
-        <button onclick="cancelAddRow()">❌ Cancelar</button>
-    </div>
 </body>
 </html>
