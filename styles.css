@@ -50,3 +50,9 @@ th, td {
 td[contenteditable="true"] {
     background-color: #ffffcc;
 }
+
+/* Primera fila con color celeste claro */
+tbody tr:first-child {
+    background-color: #d4f1f9; /* Celeste claro */
+    font-weight: bold; /* Opcional: Resaltar en negrita */
+}
