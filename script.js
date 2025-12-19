@@ -1,77 +1,94 @@
-let currentData = []; // Guardar datos actuales para modificar y filtrar
+// ===============================
+// CONFIGURACIÓN
+// ===============================
+const GOOGLE_SHEETS_API =
+  "https://script.google.com/macros/s/AKfycbwFOmnNEcqRFqgca87ldLPBf_y0S5DPwRs3tq8zRocqavEVg8GV_z7RfwC2xNuxTj5exQ/exec";
 
-// Función para actualizar el estado visual de los botones
+let currentData = []; // Datos visibles (LED o XENON)
+let allData = [];     // Todos los datos del Sheet
+
+// ===============================
+// BOTONES
+// ===============================
 function updateButtonStyles(activeButton) {
     const btnLed = document.getElementById("btnLed");
     const btnXenon = document.getElementById("btnXenon");
 
-    
     if (activeButton === "LED") {
-        btnLed.style.backgroundColor = "#28a745"; // Verde activo
+        btnLed.style.backgroundColor = "#28a745";
         btnLed.style.color = "white";
         btnLed.disabled = true;
 
-        btnXenon.style.backgroundColor = "#ccc"; // Apagado
+        btnXenon.style.backgroundColor = "#ccc";
         btnXenon.style.color = "#666";
         btnXenon.disabled = false;
     } else {
-        btnXenon.style.backgroundColor = "#28a745"; // Verde activo
+        btnXenon.style.backgroundColor = "#28a745";
         btnXenon.style.color = "white";
         btnXenon.disabled = true;
 
-        btnLed.style.backgroundColor = "#ccc"; // Apagado
+        btnLed.style.backgroundColor = "#ccc";
         btnLed.style.color = "#666";
         btnLed.disabled = false;
     }
 }
 
-// Función para limpiar la tabla antes de cargar datos nuevos
+// ===============================
+// LIMPIAR TABLA
+// ===============================
 function clearTable() {
     document.getElementById("table-body").innerHTML = "";
 }
 
-// Función para cargar la base de datos
-async function loadDatabase(file) {
+// ===============================
+// CARGAR DATOS (GOOGLE SHEETS)
+// ===============================
+async function loadDatabase(tipo) {
     try {
-        clearTable(); // Limpia la tabla antes de cargar nuevos datos
+        clearTable();
 
-        const response = await fetch(`BASES/${file}.json`);
-        if (!response.ok) throw new Error(`Error al cargar datos: ${response.status}`);
+        const response = await fetch(GOOGLE_SHEETS_API);
+        if (!response.ok) throw new Error("Error cargando Google Sheets");
 
-        const jsonData = await response.json();
-        console.log("Datos cargados:", jsonData);
+        allData = await response.json();
 
-        const dataKey = Object.keys(jsonData)[0];
-        currentData = jsonData[dataKey];
+        // FILTRAR POR TECNOLOGÍA
+        if (tipo === "BASE_FUJI_LED") {
+            currentData = allData.filter(row => row["Tecnología"] === "LED");
+            updateButtonStyles("LED");
+        } else {
+            currentData = allData.filter(row => row["Tecnología"] === "XENON");
+            updateButtonStyles("XENON");
+        }
 
-        if (!Array.isArray(currentData)) throw new Error("El formato de datos no es válido");
-
-        console.log(`Cantidad de registros en ${file}: ${currentData.length}`);
         displayData(currentData);
         populateFilters(currentData);
-        updateButtonStyles(file.includes("LED") ? "LED" : "XENON");
+
     } catch (error) {
-        console.error("No se pudieron cargar los datos:", error);
+        console.error("Error:", error);
+        alert("No se pudo cargar la base de datos");
     }
 }
 
-// Función para mostrar los datos en la tabla
+// ===============================
+// MOSTRAR DATOS
+// ===============================
 function displayData(data) {
     const tableBody = document.getElementById("table-body");
     const recordCount = document.getElementById("record-count");
 
-    tableBody.innerHTML = ""; // Limpia la tabla antes de agregar datos
+    tableBody.innerHTML = "";
 
     data.forEach((item, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${item["Model"]?.trim() || ""}</td>
-            <td>${item["Customer Name"]?.trim() || ""}</td>
-            <td>${item["Territoy"]?.trim() || ""}</td>
-            <td>${item["Address1"]?.trim() || ""}</td>
-            <td>${item["City"]?.trim() || ""}</td>
-            <td>${item["Date Sold"]?.trim() || ""}</td>
-            <td>${item["Date Installed"]?.trim() || ""}</td>
+            <td>${item["Model"] || ""}</td>
+            <td>${item["Customer Name"] || ""}</td>
+            <td>${item["Territoy"] || ""}</td>
+            <td>${item["Address1"] || ""}</td>
+            <td>${item["City"] || ""}</td>
+            <td>${item["Date Sold"] || ""}</td>
+            <td>${item["Date Installed"] || ""}</td>
             <td>
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
@@ -80,11 +97,12 @@ function displayData(data) {
         tableBody.appendChild(row);
     });
 
-    // Actualiza la cantidad de registros en el recuadro
     recordCount.textContent = data.length;
 }
 
-// Función para llenar los filtros con valores únicos
+// ===============================
+// FILTROS
+// ===============================
 function populateFilters(data) {
     const filters = {
         "filter-model": "Model",
@@ -95,80 +113,86 @@ function populateFilters(data) {
         "filter-date-installed": "Date Installed"
     };
 
-    Object.keys(filters).forEach(filterId => {
-        const select = document.getElementById(filterId);
-        select.innerHTML = '<option value="">Todos</option>'; // Resetear opciones
+    Object.keys(filters).forEach(id => {
+        const select = document.getElementById(id);
+        select.innerHTML = '<option value="">Todos</option>';
 
-        const uniqueValues = [...new Set(data.map(item => item[filters[filterId]]))].sort();
-        uniqueValues.forEach(value => {
-            if (value) {
-                const option = document.createElement("option");
-                option.value = value;
-                option.textContent = value;
-                select.appendChild(option);
+        const values = [...new Set(data.map(d => d[filters[id]]))].sort();
+        values.forEach(v => {
+            if (v) {
+                const opt = document.createElement("option");
+                opt.value = v;
+                opt.textContent = v;
+                select.appendChild(opt);
             }
         });
     });
 }
 
-// Función para filtrar los datos en la tabla
 function filterTable() {
-    const modelFilter = document.getElementById("filter-model").value;
-    const clientFilter = document.getElementById("filter-client").value;
-    const cityFilter = document.getElementById("filter-city").value;
-    const territoyFilter = document.getElementById("filter-territoy").value;
-    const dateSoldFilter = document.getElementById("filter-date-sold").value;
-    const dateInstalledFilter = document.getElementById("filter-date-installed").value;
+    const model = document.getElementById("filter-model").value;
+    const client = document.getElementById("filter-client").value;
+    const city = document.getElementById("filter-city").value;
+    const terr = document.getElementById("filter-territoy").value;
+    const sold = document.getElementById("filter-date-sold").value;
+    const inst = document.getElementById("filter-date-installed").value;
 
-    const filteredData = currentData.filter(item => {
-        return (
-            (modelFilter === "" || item["Model"] === modelFilter) &&
-            (clientFilter === "" || item["Customer Name"] === clientFilter) &&
-            (cityFilter === "" || item["City"] === cityFilter) &&
-            (territoyFilter === "" || item["Territoy"] === territoyFilter) &&
-            (dateSoldFilter === "" || item["Date Sold"] === dateSoldFilter) &&
-            (dateInstalledFilter === "" || item["Date Installed"] === dateInstalledFilter)
-        );
-    });
+    const filtered = currentData.filter(item =>
+        (model === "" || item["Model"] === model) &&
+        (client === "" || item["Customer Name"] === client) &&
+        (city === "" || item["City"] === city) &&
+        (terr === "" || item["Territoy"] === terr) &&
+        (sold === "" || item["Date Sold"] === sold) &&
+        (inst === "" || item["Date Installed"] === inst)
+    );
 
-    displayData(filteredData);
+    displayData(filtered);
 }
 
-// Función para habilitar la edición de la fila
+// ===============================
+// EDITAR / ELIMINAR (LOCAL)
+// ===============================
 function editRow(button, index) {
     const row = button.parentNode.parentNode;
     const cells = row.querySelectorAll("td");
 
     if (button.textContent === "Editar") {
-        // Habilitar edición
         cells.forEach((cell, i) => {
             if (i < cells.length - 1) {
                 cell.contentEditable = true;
-                cell.style.backgroundColor = "#ffffcc"; // Color amarillo para resaltar edición
+                cell.style.backgroundColor = "#ffffcc";
             }
         });
         button.textContent = "Guardar";
     } else {
-        // Guardar cambios
         cells.forEach((cell, i) => {
             if (i < cells.length - 1) {
-                currentData[index][Object.keys(currentData[index])[i]] = cell.textContent;
+                const keys = [
+                    "Model",
+                    "Customer Name",
+                    "Territoy",
+                    "Address1",
+                    "City",
+                    "Date Sold",
+                    "Date Installed"
+                ];
+                currentData[index][keys[i]] = cell.textContent;
                 cell.contentEditable = false;
-                cell.style.backgroundColor = ""; // Restaurar color
+                cell.style.backgroundColor = "";
             }
         });
         button.textContent = "Editar";
-        console.log("Datos actualizados:", currentData[index]); // Mostrar cambios en consola
     }
 }
 
-// Función para eliminar una fila de la tabla
 function deleteRow(index) {
-    currentData.splice(index, 1); // Elimina la fila del array
-    displayData(currentData); // Recarga la tabla con los datos actualizados
+    currentData.splice(index, 1);
+    displayData(currentData);
 }
 
-// Función para descargar en Excel
+// ===============================
+// EXPORTAR
+// ===============================
 function downloadExcel() {
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.table_to_sheet(document.querySelector("table"));
@@ -176,47 +200,35 @@ function downloadExcel() {
     XLSX.writeFile(wb, "Base_Datos.xlsx");
 }
 
-// Función para descargar en PDF
 function downloadPDF() {
     let { jsPDF } = window.jspdf;
     let doc = new jsPDF();
-
     doc.text("Base de Datos", 10, 10);
     doc.autoTable({ html: "table" });
     doc.save("Base_Datos.pdf");
 }
 
-// Mostrar / Ocultar el formulario de agregar fila
-document.getElementById("toggleAddForm").addEventListener("click", function () {
-    let form = document.getElementById("addForm");
+// ===============================
+// FORMULARIO
+// ===============================
+document.getElementById("toggleAddForm").addEventListener("click", () => {
+    const form = document.getElementById("addForm");
     form.style.display = form.style.display === "none" ? "flex" : "none";
 });
 
-// Función para agregar una nueva fila a la tabla
 function addRow() {
-    let newRow = {
-        "Model": document.getElementById("newModel").value.trim(),
-        "Customer Name": document.getElementById("newClient").value.trim(),
-        "Territoy": document.getElementById("newTerritoy").value.trim(),
-        "Address1": document.getElementById("newAddress").value.trim(),
-        "City": document.getElementById("newCity").value.trim(),
-        "Date Sold": document.getElementById("newDateSold").value || "N/A",
-        "Date Installed": document.getElementById("newDateInstalled").value || "N/A"
+    const newRow = {
+        "Model": document.getElementById("newModel").value,
+        "Customer Name": document.getElementById("newClient").value,
+        "Territoy": document.getElementById("newTerritoy").value,
+        "Address1": document.getElementById("newAddress").value,
+        "City": document.getElementById("newCity").value,
+        "Date Sold": document.getElementById("newDateSold").value,
+        "Date Installed": document.getElementById("newDateInstalled").value
     };
 
-    // Agregar al array de datos actuales
     currentData.push(newRow);
     displayData(currentData);
-
-    // Limpiar los campos
-    document.getElementById("newModel").value = "";
-    document.getElementById("newClient").value = "";
-    document.getElementById("newTerritoy").value = "";
-    document.getElementById("newAddress").value = "";
-    document.getElementById("newCity").value = "";
-    document.getElementById("newDateSold").value = "";
-    document.getElementById("newDateInstalled").value = "";
-
-    // Ocultar el formulario después de agregar
     document.getElementById("addForm").style.display = "none";
 }
+
