@@ -17,6 +17,27 @@
 <body>
 
 <h1>BASE ÁREA PRODUCTO</h1>
+    <button class="add-btn" onclick="toggleForm()">➕ Agregar registro</button>
+
+<div id="add-form" class="add-form" style="display:none;">
+    <input id="f-serie" placeholder="Serie">
+    <input id="f-modelo" placeholder="Modelo">
+    <input id="f-cliente" placeholder="Cliente">
+    <input id="f-ciudad" placeholder="Ciudad">
+    <input id="f-area" placeholder="Área">
+    <input id="f-calidad" placeholder="Calidad equipo">
+    <input id="f-venta-fabrica" placeholder="Venta fábrica">
+    <input id="f-instalacion" placeholder="Instalación">
+    <input id="f-venta-perfectech" placeholder="Venta Perfectech">
+    <input id="f-inicio-garantia" placeholder="Inicio garantía">
+    <input id="f-termino-garantia" placeholder="Término garantía">
+    <input id="f-ultima-reparacion" placeholder="Última reparación">
+    <input id="f-vendedor" placeholder="Vendedor">
+    <input id="f-distribuidor" placeholder="Distribuidor">
+
+    <button onclick="saveRecord()">💾 Guardar</button>
+</div>
+
 
 <!-- Descargas -->
 <div class="dropdown">
