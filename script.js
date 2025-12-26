@@ -28,19 +28,23 @@ function displayData(data) {
     const count = document.getElementById("record-count");
     body.innerHTML = "";
 
-    data.forEach((d, i) => {
+    data.forEach((d) => {
         body.innerHTML += `
         <tr>
-            <td>${d["Model"] || ""}</td>
-            <td>${d["Customer Name"] || ""}</td>
-            <td>${d["Territoy"] || ""}</td>
-            <td>${d["Address1"] || ""}</td>
-            <td>${d["City"] || ""}</td>
-            <td>${d["Date Sold"] || ""}</td>
-            <td>${d["Date Installed"] || ""}</td>
-            <td>
-                <button onclick="deleteRow(${i})">🗑</button>
-            </td>
+            <td>${d.SERIE || ""}</td>
+            <td>${d.MODELO || ""}</td>
+            <td>${d.CLIENTE || ""}</td>
+            <td>${d.CIUDAD || ""}</td>
+            <td>${d.AREA || ""}</td>
+            <td>${d["CALIDAD EQUIPO"] || ""}</td>
+            <td>${d["VENTA FABRICA"] || ""}</td>
+            <td>${d.INSTALACION || ""}</td>
+            <td>${d["VENTA PERFECTECH"] || ""}</td>
+            <td>${d["INICIO GARANTIA"] || ""}</td>
+            <td>${d["TERMINO GARANTIA"] || ""}</td>
+            <td>${d["ULTIMA REPARACION"] || ""}</td>
+            <td>${d.VENDEDOR || ""}</td>
+            <td>${d.DISTRIBUIDOR || ""}</td>
         </tr>`;
     });
 
@@ -50,16 +54,18 @@ function displayData(data) {
 // ===============================
 function populateFilters(data) {
     const map = {
-        "filter-model": "Model",
-        "filter-client": "Customer Name",
-        "filter-territoy": "Territoy",
-        "filter-city": "City",
-        "filter-date-sold": "Date Sold",
-        "filter-date-installed": "Date Installed"
+        "filter-modelo": "MODELO",
+        "filter-cliente": "CLIENTE",
+        "filter-ciudad": "CIUDAD",
+        "filter-area": "AREA",
+        "filter-vendedor": "VENDEDOR",
+        "filter-distribuidor": "DISTRIBUIDOR"
     };
 
     Object.entries(map).forEach(([id, key]) => {
         const sel = document.getElementById(id);
+        if (!sel) return;
+
         sel.innerHTML = `<option value="">Todos</option>`;
         [...new Set(data.map(d => d[key]))]
             .filter(Boolean)
@@ -70,19 +76,14 @@ function populateFilters(data) {
 // ===============================
 function filterTable() {
     currentData = allData.filter(d =>
-        (!filter-model.value || d["Model"] === filter-model.value) &&
-        (!filter-client.value || d["Customer Name"] === filter-client.value) &&
-        (!filter-territoy.value || d["Territoy"] === filter-territoy.value) &&
-        (!filter-city.value || d["City"] === filter-city.value) &&
-        (!filter-date-sold.value || d["Date Sold"] === filter-date-sold.value) &&
-        (!filter-date-installed.value || d["Date Installed"] === filter-date-installed.value)
+        (!filter-modelo.value || d.MODELO === filter-modelo.value) &&
+        (!filter-cliente.value || d.CLIENTE === filter-cliente.value) &&
+        (!filter-ciudad.value || d.CIUDAD === filter-ciudad.value) &&
+        (!filter-area.value || d.AREA === filter-area.value) &&
+        (!filter-vendedor.value || d.VENDEDOR === filter-vendedor.value) &&
+        (!filter-distribuidor.value || d.DISTRIBUIDOR === filter-distribuidor.value)
     );
-    displayData(currentData);
-}
 
-// ===============================
-function deleteRow(i) {
-    currentData.splice(i, 1);
     displayData(currentData);
 }
 
@@ -91,34 +92,9 @@ function downloadExcel() {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(currentData);
     XLSX.utils.book_append_sheet(wb, ws, "Base");
-    XLSX.writeFile(wb, "Base_Area_Producto.xlsx");
-}
-
-function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.autoTable({ html: "table" });
-    doc.save("Base_Area_Producto.pdf");
-}
-
-// ===============================
-document.getElementById("toggleAddForm").onclick = () => {
-    addForm.style.display = addForm.style.display === "none" ? "flex" : "none";
-};
-
-function addRow() {
-    currentData.push({
-        "Model": newModel.value,
-        "Customer Name": newClient.value,
-        "Territoy": newTerritoy.value,
-        "Address1": newAddress.value,
-        "City": newCity.value,
-        "Date Sold": newDateSold.value,
-        "Date Installed": newDateInstalled.value
-    });
-    displayData(currentData);
-    addForm.style.display = "none";
+    XLSX.writeFile(wb, "Base_Instalada.xlsx");
 }
 
 // ===============================
 document.addEventListener("DOMContentLoaded", loadDatabase);
+
