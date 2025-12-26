@@ -43,7 +43,9 @@ function clearTable() {
 // ===============================
 // CARGAR DATOS (GOOGLE SHEETS)
 // ===============================
-async function loadDatabase(tipo) {
+
+/*
+async function loadDatabase(tipo){
     try {
         clearTable();
 
@@ -60,6 +62,25 @@ async function loadDatabase(tipo) {
             currentData = allData.filter(row => row["Tecnología"] === "XENON");
             updateButtonStyles("XENON");
         }
+
+        displayData(currentData);
+        populateFilters(currentData);
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("No se pudo cargar la base de datos");
+    }
+}
+*/
+async function loadDatabase() {
+    try {
+        clearTable();
+
+        const response = await fetch(GOOGLE_SHEETS_API);
+        if (!response.ok) throw new Error("Error cargando Google Sheets");
+
+        allData = await response.json();
+        currentData = allData;
 
         displayData(currentData);
         populateFilters(currentData);
