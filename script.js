@@ -15,7 +15,7 @@ function clearTable() {
 }
 
 // ===============================
-// CARGAR DATOS (GOOGLE SHEETS)
+// CARGAR DATOS
 // ===============================
 async function loadDatabase() {
     try {
@@ -31,7 +31,7 @@ async function loadDatabase() {
         populateFilters(currentData);
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
         alert("No se pudo cargar la base de datos");
     }
 }
@@ -48,13 +48,13 @@ function displayData(data) {
     data.forEach((item, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${item["Model"] || ""}</td>
-            <td>${item["Customer Name"] || ""}</td>
-            <td>${item["Territoy"] || ""}</td>
-            <td>${item["Address1"] || ""}</td>
-            <td>${item["City"] || ""}</td>
-            <td>${item["Date Sold"] || ""}</td>
-            <td>${item["Date Installed"] || ""}</td>
+            <td>${item["MODELO"] || ""}</td>
+            <td>${item["CLIENTE"] || ""}</td>
+            <td>${item["TERRITORIO"] || ""}</td>
+            <td>${item["DIRECCION"] || ""}</td>
+            <td>${item["CIUDAD"] || ""}</td>
+            <td>${item["FECHA VENTA"] || ""}</td>
+            <td>${item["FECHA INSTALACION"] || ""}</td>
             <td>
                 <button onclick="editRow(this, ${index})">Editar</button>
                 <button onclick="deleteRow(${index})">Eliminar</button>
@@ -71,12 +71,12 @@ function displayData(data) {
 // ===============================
 function populateFilters(data) {
     const filters = {
-        "filter-model": "Model",
-        "filter-client": "Customer Name",
-        "filter-territoy": "Territoy",
-        "filter-city": "City",
-        "filter-date-sold": "Date Sold",
-        "filter-date-installed": "Date Installed"
+        "filter-model": "MODELO",
+        "filter-client": "CLIENTE",
+        "filter-territoy": "TERRITORIO",
+        "filter-city": "CIUDAD",
+        "filter-date-sold": "FECHA VENTA",
+        "filter-date-installed": "FECHA INSTALACION"
     };
 
     Object.keys(filters).forEach(id => {
@@ -104,12 +104,12 @@ function filterTable() {
     const inst = document.getElementById("filter-date-installed").value;
 
     const filtered = currentData.filter(item =>
-        (model === "" || item["Model"] === model) &&
-        (client === "" || item["Customer Name"] === client) &&
-        (city === "" || item["City"] === city) &&
-        (terr === "" || item["Territoy"] === terr) &&
-        (sold === "" || item["Date Sold"] === sold) &&
-        (inst === "" || item["Date Installed"] === inst)
+        (model === "" || item["MODELO"] === model) &&
+        (client === "" || item["CLIENTE"] === client) &&
+        (city === "" || item["CIUDAD"] === city) &&
+        (terr === "" || item["TERRITORIO"] === terr) &&
+        (sold === "" || item["FECHA VENTA"] === sold) &&
+        (inst === "" || item["FECHA INSTALACION"] === inst)
     );
 
     displayData(filtered);
@@ -122,33 +122,32 @@ function editRow(button, index) {
     const row = button.parentNode.parentNode;
     const cells = row.querySelectorAll("td");
 
+    const keys = [
+        "MODELO",
+        "CLIENTE",
+        "TERRITORIO",
+        "DIRECCION",
+        "CIUDAD",
+        "FECHA VENTA",
+        "FECHA INSTALACION"
+    ];
+
     if (button.textContent === "Editar") {
         cells.forEach((cell, i) => {
-            if (i < cells.length - 1) {
+            if (i < keys.length) {
                 cell.contentEditable = true;
                 cell.style.backgroundColor = "#ffffcc";
             }
         });
         button.textContent = "Guardar";
     } else {
-        const keys = [
-            "Model",
-            "Customer Name",
-            "Territoy",
-            "Address1",
-            "City",
-            "Date Sold",
-            "Date Installed"
-        ];
-
         cells.forEach((cell, i) => {
-            if (i < cells.length - 1) {
+            if (i < keys.length) {
                 currentData[index][keys[i]] = cell.textContent;
                 cell.contentEditable = false;
                 cell.style.backgroundColor = "";
             }
         });
-
         button.textContent = "Editar";
     }
 }
@@ -165,15 +164,15 @@ function downloadExcel() {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.table_to_sheet(document.querySelector("table"));
     XLSX.utils.book_append_sheet(wb, ws, "Datos");
-    XLSX.writeFile(wb, "Base_Datos.xlsx");
+    XLSX.writeFile(wb, "Base_Area_Producto.xlsx");
 }
 
 function downloadPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    doc.text("Base de Datos", 10, 10);
+    doc.text("Base Área Producto", 10, 10);
     doc.autoTable({ html: "table" });
-    doc.save("Base_Datos.pdf");
+    doc.save("Base_Area_Producto.pdf");
 }
 
 // ===============================
@@ -186,13 +185,13 @@ document.getElementById("toggleAddForm").addEventListener("click", () => {
 
 function addRow() {
     const newRow = {
-        "Model": document.getElementById("newModel").value,
-        "Customer Name": document.getElementById("newClient").value,
-        "Territoy": document.getElementById("newTerritoy").value,
-        "Address1": document.getElementById("newAddress").value,
-        "City": document.getElementById("newCity").value,
-        "Date Sold": document.getElementById("newDateSold").value,
-        "Date Installed": document.getElementById("newDateInstalled").value
+        "MODELO": document.getElementById("newModel").value,
+        "CLIENTE": document.getElementById("newClient").value,
+        "TERRITORIO": document.getElementById("newTerritoy").value,
+        "DIRECCION": document.getElementById("newAddress").value,
+        "CIUDAD": document.getElementById("newCity").value,
+        "FECHA VENTA": document.getElementById("newDateSold").value,
+        "FECHA INSTALACION": document.getElementById("newDateInstalled").value
     };
 
     currentData.push(newRow);
@@ -201,6 +200,6 @@ function addRow() {
 }
 
 // ===============================
-// CARGAR AL ABRIR LA PÁGINA
+// CARGAR AL ABRIR
 // ===============================
 document.addEventListener("DOMContentLoaded", loadDatabase);
