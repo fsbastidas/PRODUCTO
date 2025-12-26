@@ -5,7 +5,7 @@ const GOOGLE_SHEETS_API =
 
 let allData = [];
 let currentData = [];
-let editIndex = null; // 👈 para saber si editamos o agregamos
+let editIndex = null;
 
 // ===============================
 // CARGAR BASE DE DATOS
@@ -66,7 +66,7 @@ function displayData(data) {
 // EDITAR REGISTRO
 function editRecord(index) {
     const d = currentData[index];
-    editIndex = allData.indexOf(d); // índice real en la base
+    editIndex = allData.indexOf(d);
 
     document.getElementById("f-serie").value = d.SERIE || "";
     document.getElementById("f-modelo").value = d.MODELO || "";
@@ -94,15 +94,10 @@ async function deleteRecord(index) {
     const realIndex = allData.indexOf(currentData[index]);
 
     try {
-        const res = await fetch(GOOGLE_SHEETS_API, {
+        await fetch(GOOGLE_SHEETS_API, {
             method: "POST",
-            body: JSON.stringify({
-                action: "delete",
-                index: realIndex
-            })
+            body: JSON.stringify({ action: "delete", index: realIndex })
         });
-
-        if (!res.ok) throw new Error();
 
         alert("🗑️ Registro eliminado");
         loadDatabase();
@@ -138,17 +133,18 @@ async function saveRecord() {
         : { action: "edit", index: editIndex, data };
 
     try {
-        const res = await fetch(GOOGLE_SHEETS_API, {
+        await fetch(GOOGLE_SHEETS_API, {
             method: "POST",
             body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error();
-
         alert(editIndex === null ? "✅ Registro agregado" : "✏️ Registro actualizado");
 
         editIndex = null;
-        document.getElementById("add-form").reset();
+
+        // limpiar inputs
+        document.querySelectorAll("#add-form input").forEach(i => i.value = "");
+
         document.getElementById("add-form").style.display = "none";
         loadDatabase();
 
@@ -159,7 +155,7 @@ async function saveRecord() {
 }
 
 // ===============================
-// FILTROS (sin cambios)
+// FILTROS
 function populateFilters(data) {
     const map = {
         "filter-modelo": "MODELO",
@@ -172,8 +168,6 @@ function populateFilters(data) {
 
     Object.entries(map).forEach(([id, key]) => {
         const sel = document.getElementById(id);
-        if (!sel) return;
-
         sel.innerHTML = `<option value="">Todos</option>`;
         [...new Set(data.map(d => d[key]))]
             .filter(Boolean)
@@ -183,14 +177,22 @@ function populateFilters(data) {
 
 // ===============================
 function filterTable() {
+    const fModelo = document.getElementById("filter-modelo").value;
+    const fCliente = document.getElementById("filter-cliente").value;
+    const fCiudad = document.getElementById("filter-ciudad").value;
+    const fArea = document.getElementById("filter-area").value;
+    const fVendedor = document.getElementById("filter-vendedor").value;
+    const fDistribuidor = document.getElementById("filter-distribuidor").value;
+
     currentData = allData.filter(d =>
-        (!filter-modelo.value || d.MODELO === filter-modelo.value) &&
-        (!filter-cliente.value || d.CLIENTE === filter-cliente.value) &&
-        (!filter-ciudad.value || d.CIUDAD === filter-ciudad.value) &&
-        (!filter-area.value || d.AREA === filter-area.value) &&
-        (!filter-vendedor.value || d.VENDEDOR === filter-vendedor.value) &&
-        (!filter-distribuidor.value || d.DISTRIBUIDOR === filter-distribuidor.value)
+        (!fModelo || d.MODELO === fModelo) &&
+        (!fCliente || d.CLIENTE === fCliente) &&
+        (!fCiudad || d.CIUDAD === fCiudad) &&
+        (!fArea || d.AREA === fArea) &&
+        (!fVendedor || d.VENDEDOR === fVendedor) &&
+        (!fDistribuidor || d.DISTRIBUIDOR === fDistribuidor)
     );
+
     displayData(currentData);
 }
 
@@ -211,3 +213,4 @@ function toggleForm() {
 
 // ===============================
 document.addEventListener("DOMContentLoaded", loadDatabase);
+
