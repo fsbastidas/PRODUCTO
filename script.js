@@ -4,34 +4,8 @@
 const GOOGLE_SHEETS_API =
   "https://script.google.com/macros/s/AKfycbwFOmnNEcqRFqgca87ldLPBf_y0S5DPwRs3tq8zRocqavEVg8GV_z7RfwC2xNuxTj5exQ/exec";
 
-let currentData = []; // Datos visibles (LED o XENON)
-let allData = [];     // Todos los datos del Sheet
-
-// ===============================
-// BOTONES
-// ===============================
-function updateButtonStyles(activeButton) {
-    const btnLed = document.getElementById("btnLed");
-    const btnXenon = document.getElementById("btnXenon");
-
-    if (activeButton === "LED") {
-        btnLed.style.backgroundColor = "#28a745";
-        btnLed.style.color = "white";
-        btnLed.disabled = true;
-
-        btnXenon.style.backgroundColor = "#ccc";
-        btnXenon.style.color = "#666";
-        btnXenon.disabled = false;
-    } else {
-        btnXenon.style.backgroundColor = "#28a745";
-        btnXenon.style.color = "white";
-        btnXenon.disabled = true;
-
-        btnLed.style.backgroundColor = "#ccc";
-        btnLed.style.color = "#666";
-        btnLed.disabled = false;
-    }
-}
+let currentData = [];
+let allData = [];
 
 // ===============================
 // LIMPIAR TABLA
@@ -43,35 +17,6 @@ function clearTable() {
 // ===============================
 // CARGAR DATOS (GOOGLE SHEETS)
 // ===============================
-
-/*
-async function loadDatabase(tipo){
-    try {
-        clearTable();
-
-        const response = await fetch(GOOGLE_SHEETS_API);
-        if (!response.ok) throw new Error("Error cargando Google Sheets");
-
-        allData = await response.json();
-
-        // FILTRAR POR TECNOLOGÍA
-        if (tipo === "BASE_FUJI_LED") {
-            currentData = allData.filter(row => row["Tecnología"] === "LED");
-            updateButtonStyles("LED");
-        } else {
-            currentData = allData.filter(row => row["Tecnología"] === "XENON");
-            updateButtonStyles("XENON");
-        }
-
-        displayData(currentData);
-        populateFilters(currentData);
-
-    } catch (error) {
-        console.error("Error:", error);
-        alert("No se pudo cargar la base de datos");
-    }
-}
-*/
 async function loadDatabase() {
     try {
         clearTable();
@@ -186,22 +131,24 @@ function editRow(button, index) {
         });
         button.textContent = "Guardar";
     } else {
+        const keys = [
+            "Model",
+            "Customer Name",
+            "Territoy",
+            "Address1",
+            "City",
+            "Date Sold",
+            "Date Installed"
+        ];
+
         cells.forEach((cell, i) => {
             if (i < cells.length - 1) {
-                const keys = [
-                    "Model",
-                    "Customer Name",
-                    "Territoy",
-                    "Address1",
-                    "City",
-                    "Date Sold",
-                    "Date Installed"
-                ];
                 currentData[index][keys[i]] = cell.textContent;
                 cell.contentEditable = false;
                 cell.style.backgroundColor = "";
             }
         });
+
         button.textContent = "Editar";
     }
 }
@@ -215,15 +162,15 @@ function deleteRow(index) {
 // EXPORTAR
 // ===============================
 function downloadExcel() {
-    let wb = XLSX.utils.book_new();
-    let ws = XLSX.utils.table_to_sheet(document.querySelector("table"));
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.table_to_sheet(document.querySelector("table"));
     XLSX.utils.book_append_sheet(wb, ws, "Datos");
     XLSX.writeFile(wb, "Base_Datos.xlsx");
 }
 
 function downloadPDF() {
-    let { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
     doc.text("Base de Datos", 10, 10);
     doc.autoTable({ html: "table" });
     doc.save("Base_Datos.pdf");
@@ -253,3 +200,7 @@ function addRow() {
     document.getElementById("addForm").style.display = "none";
 }
 
+// ===============================
+// CARGAR AL ABRIR LA PÁGINA
+// ===============================
+document.addEventListener("DOMContentLoaded", loadDatabase);
