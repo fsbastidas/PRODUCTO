@@ -143,16 +143,16 @@ function loadDatabase(tipo) {
     // Mostramos el loading
     document.getElementById("loading").style.display = "flex";
 
-    // Simulación de fetch: reemplaza con tu fuente de datos real
-    fetch(`datos_${tipo}.json`) // ejemplo: datos_LED.json o datos_XENON.json
-        .then(response => response.json())
+    // Cargar tu archivo JSON real
+    fetch('datos.json')  // <-- reemplaza 'datos.json' con tu archivo real
+        .then(response => response.json())  // Convertimos a objeto JavaScript
         .then(data => {
-            renderTable(data);
-            hideLoading();
+            renderTable(data);  // Llenamos la tabla con los datos
+            hideLoading();      // Ocultamos el mensaje de cargando
         })
         .catch(error => {
             console.error("Error al cargar la base de datos:", error);
-            hideLoading();
+            hideLoading();      // Ocultar aunque haya error
         });
 }
 
