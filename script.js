@@ -1,3 +1,5 @@
+// ===============================
+// URL DEL APPS SCRIPT (DEPLOY /exec)
 const GOOGLE_SHEETS_API =
 "https://script.google.com/macros/s/AKfycbzv2XqvNKWSRim92dDDcvJj798pglXYUKlgak0VnlZXTFzDrNs8jv6iPYPq74aBtvd2/exec";
 
@@ -5,6 +7,7 @@ let allData = [];
 let currentData = [];
 
 // ===============================
+// CARGAR BASE DE DATOS
 async function loadDatabase() {
     try {
         const res = await fetch(GOOGLE_SHEETS_API);
@@ -23,12 +26,14 @@ async function loadDatabase() {
 }
 
 // ===============================
+// MOSTRAR DATOS EN TABLA
 function displayData(data) {
     const body = document.getElementById("table-body");
     const count = document.getElementById("record-count");
+
     body.innerHTML = "";
 
-    data.forEach((d) => {
+    data.forEach(d => {
         body.innerHTML += `
         <tr>
             <td>${d.SERIE || ""}</td>
@@ -45,13 +50,15 @@ function displayData(data) {
             <td>${d["ULTIMA REPARACION"] || ""}</td>
             <td>${d.VENDEDOR || ""}</td>
             <td>${d.DISTRIBUIDOR || ""}</td>
-        </tr>`;
+        </tr>
+        `;
     });
 
     count.textContent = data.length;
 }
 
 // ===============================
+// CARGAR OPCIONES DE FILTROS
 function populateFilters(data) {
     const map = {
         "filter-modelo": "MODELO",
@@ -69,38 +76,48 @@ function populateFilters(data) {
         sel.innerHTML = `<option value="">Todos</option>`;
         [...new Set(data.map(d => d[key]))]
             .filter(Boolean)
-            .forEach(v => sel.innerHTML += `<option>${v}</option>`);
+            .forEach(v => {
+                sel.innerHTML += `<option value="${v}">${v}</option>`;
+            });
     });
 }
 
 // ===============================
+// FILTRAR TABLA
 function filterTable() {
     currentData = allData.filter(d =>
-        (!filter-modelo.value || d.MODELO === filter-modelo.value) &&
-        (!filter-cliente.value || d.CLIENTE === filter-cliente.value) &&
-        (!filter-ciudad.value || d.CIUDAD === filter-ciudad.value) &&
-        (!filter-area.value || d.AREA === filter-area.value) &&
-        (!filter-vendedor.value || d.VENDEDOR === filter-vendedor.value) &&
-        (!filter-distribuidor.value || d.DISTRIBUIDOR === filter-distribuidor.value)
+        (!document.getElementById("filter-modelo").value || d.MODELO === document.getElementById("filter-modelo").value) &&
+        (!document.getElementById("filter-cliente").value || d.CLIENTE === document.getElementById("filter-cliente").value) &&
+        (!document.getElementById("filter-ciudad").value || d.CIUDAD === document.getElementById("filter-ciudad").value) &&
+        (!document.getElementById("filter-area").value || d.AREA === document.getElementById("filter-area").value) &&
+        (!document.getElementById("filter-vendedor").value || d.VENDEDOR === document.getElementById("filter-vendedor").value) &&
+        (!document.getElementById("filter-distribuidor").value || d.DISTRIBUIDOR === document.getElementById("filter-distribuidor").value)
     );
 
     displayData(currentData);
 }
 
 // ===============================
+// EXPORTAR A EXCEL
 function downloadExcel() {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(currentData);
-    XLSX.utils.book_append_sheet(wb, ws, "Base");
+    XLSX.utils.book_append_sheet(wb, ws, "Base Instalada");
     XLSX.writeFile(wb, "Base_Instalada.xlsx");
 }
+
+// ===============================
+// MOSTRAR / OCULTAR FORMULARIO
 function toggleForm() {
-    const f = document.getElementById("add-form");
-    f.style.display = f.style.display === "none" ? "flex" : "none";
+    const form = document.getElementById("add-form");
+    if (!form) return;
+
+    form.style.display = form.style.display === "none" ? "flex" : "none";
 }
 
+// ===============================
+// GUARDAR REGISTRO NUEVO
 async function saveRecord() {
-
     const data = {
         SERIE: document.getElementById("f-serie").value,
         MODELO: document.getElementById("f-modelo").value,
@@ -118,21 +135,25 @@ async function saveRecord() {
         DISTRIBUIDOR: document.getElementById("f-distribuidor").value
     };
 
-    const res = await fetch(GOOGLE_SHEETS_API, {
-        method: "POST",
-        body: JSON.stringify(data)
-    });
+    try {
+        const res = await fetch(GOOGLE_SHEETS_API, {
+            method: "POST",
+            body: JSON.stringify(data)
+        });
 
-    if (res.ok) {
-        alert("✅ Registro guardado");
-        loadDatabase(); // recarga la tabla
+        if (!res.ok) throw new Error("Error al guardar");
+
+        alert("✅ Registro guardado correctamente");
+
         toggleForm();
-    } else {
-        alert("❌ Error al guardar");
+        loadDatabase();
+
+    } catch (e) {
+        alert("❌ No se pudo guardar el registro");
+        console.error(e);
     }
 }
 
-
 // ===============================
+// INICIAR AL CARGAR LA PÁGINA
 document.addEventListener("DOMContentLoaded", loadDatabase);
-
