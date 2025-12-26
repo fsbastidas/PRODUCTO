@@ -182,6 +182,8 @@ function populateFilters(data) {
 
 // ===============================
 function filterTable() {
+    showLoading();
+    
     const fModelo = document.getElementById("filter-modelo").value;
     const fCliente = document.getElementById("filter-cliente").value;
     const fCiudad = document.getElementById("filter-ciudad").value;
@@ -199,6 +201,26 @@ function filterTable() {
     );
 
     displayData(currentData);
+    // 🔄 Actualizar los filtros según lo filtrado
+    const map = {
+        "filter-modelo": "MODELO",
+        "filter-cliente": "CLIENTE",
+        "filter-ciudad": "CIUDAD",
+        "filter-area": "AREA",
+        "filter-vendedor": "VENDEDOR",
+        "filter-distribuidor": "DISTRIBUIDOR"
+    };
+
+    Object.entries(map).forEach(([id, key]) => {
+        const sel = document.getElementById(id);
+        const selected = sel.value; // guardamos selección actual
+        sel.innerHTML = `<option value="">Todos</option>`;
+        [...new Set(currentData.map(d => d[key]))]
+            .filter(Boolean)
+            .forEach(v => sel.innerHTML += `<option value="${v}" ${v === selected ? "selected" : ""}>${v}</option>`);
+    });
+
+    hideLoading(); // ocultar mensaje
 }
 
 // ===============================
