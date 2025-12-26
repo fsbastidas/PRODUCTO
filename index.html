@@ -17,7 +17,7 @@
 <body>
 
 <h1>BASE ÁREA PRODUCTO</h1>
-    <button class="add-btn" onclick="toggleForm()">➕ Agregar registro</button>
+<button class="add-btn" onclick="toggleForm()">➕ Agregar registro</button>
 
 <div id="add-form" class="add-form" style="display:none;">
     <input id="f-serie" placeholder="Serie">
@@ -35,9 +35,9 @@
     <input id="f-vendedor" placeholder="Vendedor">
     <input id="f-distribuidor" placeholder="Distribuidor">
 
-    <button onclick="saveRecord()">💾 Guardar</button>
+    <!-- 👇 CORREGIDO -->
+    <button type="button" onclick="saveRecord()">💾 Guardar</button>
 </div>
-
 
 <!-- Descargas -->
 <div class="dropdown">
@@ -111,6 +111,7 @@
             <th>ÚLTIMA REPARACIÓN</th>
             <th>VENDEDOR</th>
             <th>DISTRIBUIDOR</th>
+            <th>ACCIONES</th> <!-- 👈 CLAVE -->
         </tr>
     </thead>
 
@@ -119,3 +120,4 @@
 
 </body>
 </html>
+
