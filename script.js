@@ -5,6 +5,7 @@ const GOOGLE_SHEETS_API =
 
 let allData = [];
 let currentData = [];
+let editIndex = null; // 👈 para saber si editamos o agregamos
 
 // ===============================
 // CARGAR BASE DE DATOS
@@ -33,7 +34,7 @@ function displayData(data) {
 
     body.innerHTML = "";
 
-    data.forEach(d => {
+    data.forEach((d, index) => {
         body.innerHTML += `
         <tr>
             <td>${d.SERIE || ""}</td>
@@ -50,6 +51,10 @@ function displayData(data) {
             <td>${d["ULTIMA REPARACION"] || ""}</td>
             <td>${d.VENDEDOR || ""}</td>
             <td>${d.DISTRIBUIDOR || ""}</td>
+            <td>
+                <button onclick="editRecord(${index})">✏️</button>
+                <button onclick="deleteRecord(${index})">🗑️</button>
+            </td>
         </tr>
         `;
     });
@@ -58,65 +63,58 @@ function displayData(data) {
 }
 
 // ===============================
-// CARGAR OPCIONES DE FILTROS
-function populateFilters(data) {
-    const map = {
-        "filter-modelo": "MODELO",
-        "filter-cliente": "CLIENTE",
-        "filter-ciudad": "CIUDAD",
-        "filter-area": "AREA",
-        "filter-vendedor": "VENDEDOR",
-        "filter-distribuidor": "DISTRIBUIDOR"
-    };
+// EDITAR REGISTRO
+function editRecord(index) {
+    const d = currentData[index];
+    editIndex = allData.indexOf(d); // índice real en la base
 
-    Object.entries(map).forEach(([id, key]) => {
-        const sel = document.getElementById(id);
-        if (!sel) return;
+    document.getElementById("f-serie").value = d.SERIE || "";
+    document.getElementById("f-modelo").value = d.MODELO || "";
+    document.getElementById("f-cliente").value = d.CLIENTE || "";
+    document.getElementById("f-ciudad").value = d.CIUDAD || "";
+    document.getElementById("f-area").value = d.AREA || "";
+    document.getElementById("f-calidad").value = d["CALIDAD EQUIPO"] || "";
+    document.getElementById("f-venta-fabrica").value = d["VENTA FABRICA"] || "";
+    document.getElementById("f-instalacion").value = d.INSTALACION || "";
+    document.getElementById("f-venta-perfectech").value = d["VENTA PERFECTECH"] || "";
+    document.getElementById("f-inicio-garantia").value = d["INICIO GARANTIA"] || "";
+    document.getElementById("f-termino-garantia").value = d["TERMINO GARANTIA"] || "";
+    document.getElementById("f-ultima-reparacion").value = d["ULTIMA REPARACION"] || "";
+    document.getElementById("f-vendedor").value = d.VENDEDOR || "";
+    document.getElementById("f-distribuidor").value = d.DISTRIBUIDOR || "";
 
-        sel.innerHTML = `<option value="">Todos</option>`;
-        [...new Set(data.map(d => d[key]))]
-            .filter(Boolean)
-            .forEach(v => {
-                sel.innerHTML += `<option value="${v}">${v}</option>`;
-            });
-    });
+    document.getElementById("add-form").style.display = "flex";
 }
 
 // ===============================
-// FILTRAR TABLA
-function filterTable() {
-    currentData = allData.filter(d =>
-        (!document.getElementById("filter-modelo").value || d.MODELO === document.getElementById("filter-modelo").value) &&
-        (!document.getElementById("filter-cliente").value || d.CLIENTE === document.getElementById("filter-cliente").value) &&
-        (!document.getElementById("filter-ciudad").value || d.CIUDAD === document.getElementById("filter-ciudad").value) &&
-        (!document.getElementById("filter-area").value || d.AREA === document.getElementById("filter-area").value) &&
-        (!document.getElementById("filter-vendedor").value || d.VENDEDOR === document.getElementById("filter-vendedor").value) &&
-        (!document.getElementById("filter-distribuidor").value || d.DISTRIBUIDOR === document.getElementById("filter-distribuidor").value)
-    );
+// ELIMINAR REGISTRO
+async function deleteRecord(index) {
+    if (!confirm("¿Seguro que deseas eliminar este registro?")) return;
 
-    displayData(currentData);
+    const realIndex = allData.indexOf(currentData[index]);
+
+    try {
+        const res = await fetch(GOOGLE_SHEETS_API, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "delete",
+                index: realIndex
+            })
+        });
+
+        if (!res.ok) throw new Error();
+
+        alert("🗑️ Registro eliminado");
+        loadDatabase();
+
+    } catch (e) {
+        alert("❌ Error al eliminar");
+        console.error(e);
+    }
 }
 
 // ===============================
-// EXPORTAR A EXCEL
-function downloadExcel() {
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(currentData);
-    XLSX.utils.book_append_sheet(wb, ws, "Base Instalada");
-    XLSX.writeFile(wb, "Base_Instalada.xlsx");
-}
-
-// ===============================
-// MOSTRAR / OCULTAR FORMULARIO
-function toggleForm() {
-    const form = document.getElementById("add-form");
-    if (!form) return;
-
-    form.style.display = form.style.display === "none" ? "flex" : "none";
-}
-
-// ===============================
-// GUARDAR REGISTRO NUEVO
+// GUARDAR (AGREGAR / EDITAR)
 async function saveRecord() {
     const data = {
         SERIE: document.getElementById("f-serie").value,
@@ -135,25 +133,81 @@ async function saveRecord() {
         DISTRIBUIDOR: document.getElementById("f-distribuidor").value
     };
 
+    const payload = editIndex === null
+        ? { action: "add", data }
+        : { action: "edit", index: editIndex, data };
+
     try {
         const res = await fetch(GOOGLE_SHEETS_API, {
             method: "POST",
-            body: JSON.stringify(data)
+            body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error("Error al guardar");
+        if (!res.ok) throw new Error();
 
-        alert("✅ Registro guardado correctamente");
+        alert(editIndex === null ? "✅ Registro agregado" : "✏️ Registro actualizado");
 
-        toggleForm();
+        editIndex = null;
+        document.getElementById("add-form").reset();
+        document.getElementById("add-form").style.display = "none";
         loadDatabase();
 
     } catch (e) {
-        alert("❌ No se pudo guardar el registro");
+        alert("❌ Error al guardar");
         console.error(e);
     }
 }
 
 // ===============================
-// INICIAR AL CARGAR LA PÁGINA
+// FILTROS (sin cambios)
+function populateFilters(data) {
+    const map = {
+        "filter-modelo": "MODELO",
+        "filter-cliente": "CLIENTE",
+        "filter-ciudad": "CIUDAD",
+        "filter-area": "AREA",
+        "filter-vendedor": "VENDEDOR",
+        "filter-distribuidor": "DISTRIBUIDOR"
+    };
+
+    Object.entries(map).forEach(([id, key]) => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+
+        sel.innerHTML = `<option value="">Todos</option>`;
+        [...new Set(data.map(d => d[key]))]
+            .filter(Boolean)
+            .forEach(v => sel.innerHTML += `<option value="${v}">${v}</option>`);
+    });
+}
+
+// ===============================
+function filterTable() {
+    currentData = allData.filter(d =>
+        (!filter-modelo.value || d.MODELO === filter-modelo.value) &&
+        (!filter-cliente.value || d.CLIENTE === filter-cliente.value) &&
+        (!filter-ciudad.value || d.CIUDAD === filter-ciudad.value) &&
+        (!filter-area.value || d.AREA === filter-area.value) &&
+        (!filter-vendedor.value || d.VENDEDOR === filter-vendedor.value) &&
+        (!filter-distribuidor.value || d.DISTRIBUIDOR === filter-distribuidor.value)
+    );
+    displayData(currentData);
+}
+
+// ===============================
+// EXPORTAR
+function downloadExcel() {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(currentData);
+    XLSX.utils.book_append_sheet(wb, ws, "Base Instalada");
+    XLSX.writeFile(wb, "Base_Instalada.xlsx");
+}
+
+// ===============================
+function toggleForm() {
+    const form = document.getElementById("add-form");
+    form.style.display = form.style.display === "none" ? "flex" : "none";
+}
+
+// ===============================
 document.addEventListener("DOMContentLoaded", loadDatabase);
