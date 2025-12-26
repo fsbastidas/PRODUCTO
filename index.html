@@ -69,43 +69,36 @@
 
 <!-- FILTROS -->
 <div class="filters">
-
     <label>Modelo:
         <select id="filter-modelo" onchange="filterTable()">
             <option value="">Todos</option>
         </select>
     </label>
-
     <label>Cliente:
         <select id="filter-cliente" onchange="filterTable()">
             <option value="">Todos</option>
         </select>
     </label>
-
     <label>Ciudad:
         <select id="filter-ciudad" onchange="filterTable()">
             <option value="">Todos</option>
         </select>
     </label>
-
     <label>Área:
         <select id="filter-area" onchange="filterTable()">
             <option value="">Todos</option>
         </select>
     </label>
-
     <label>Vendedor:
         <select id="filter-vendedor" onchange="filterTable()">
             <option value="">Todos</option>
         </select>
     </label>
-
     <label>Distribuidor:
         <select id="filter-distribuidor" onchange="filterTable()">
             <option value="">Todos</option>
         </select>
     </label>
-
 </div>
 
 <!-- TABLA -->
@@ -139,26 +132,26 @@ function hideLoading() {
     document.getElementById("loading").style.display = "none";
 }
 
-function loadDatabase(tipo) {
-    // Mostramos el loading
+function loadDatabase() {
+    // Mostrar mensaje cargando
     document.getElementById("loading").style.display = "flex";
 
     // Cargar tu archivo JSON real
-    fetch('datos.json')  // <-- reemplaza 'datos.json' con tu archivo real
-        .then(response => response.json())  // Convertimos a objeto JavaScript
+    fetch('datos.json') // <-- reemplaza con tu archivo real
+        .then(response => response.json())
         .then(data => {
-            renderTable(data);  // Llenamos la tabla con los datos
-            hideLoading();      // Ocultamos el mensaje de cargando
+            renderTable(data);  // llenar tabla
+            hideLoading();      // ocultar cargando
         })
         .catch(error => {
             console.error("Error al cargar la base de datos:", error);
-            hideLoading();      // Ocultar aunque haya error
+            hideLoading();      // ocultar incluso si hay error
         });
 }
 
 function renderTable(data) {
     const tbody = document.getElementById("table-body");
-    tbody.innerHTML = ""; // limpiar tabla
+    tbody.innerHTML = "";
 
     data.forEach(item => {
         const row = document.createElement("tr");
@@ -182,13 +175,13 @@ function renderTable(data) {
         tbody.appendChild(row);
     });
 
-    // Actualizar contador de registros
     document.getElementById("record-count").textContent = data.length;
 }
 
-// Si quieres que cargue al inicio:
-// window.addEventListener("DOMContentLoaded", () => loadDatabase('LED'));
+// Cargar automáticamente al abrir la página
+window.addEventListener("DOMContentLoaded", () => loadDatabase());
 </script>
 
 </body>
 </html>
+
