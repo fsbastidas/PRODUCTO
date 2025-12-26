@@ -191,8 +191,12 @@ function renderTable(data) {
 
     document.getElementById("record-count").textContent = data.length;
 }
+
+// 🔴 Cargar base automáticamente al abrir la página
+document.addEventListener("DOMContentLoaded", loadDatabase);
 </script>
 
 </body>
 </html>
+
 
