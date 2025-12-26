@@ -193,7 +193,9 @@ function renderTable(data) {
 }
 
 // 🔴 Cargar base automáticamente al abrir la página
-document.addEventListener("DOMContentLoaded", loadDatabase);
+document.addEventListener("DOMContentLoaded", () => {
+    loadDatabase();
+});   
 </script>
 
 </body>
