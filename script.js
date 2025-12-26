@@ -1,5 +1,5 @@
 const GOOGLE_SHEETS_API =
-"https://script.google.com/macros/library/d/1-ehECX4FSMi2jf5OPGHVbDjqgtkOo2dzaUsq9VD42zBfFQeAjc6teBSu/3";
+"https://script.google.com/macros/s/AKfycbzv2XqvNKWSRim92dDDcvJj798pglXYUKlgak0VnlZXTFzDrNs8jv6iPYPq74aBtvd2/exec";
 
 let allData = [];
 let currentData = [];
