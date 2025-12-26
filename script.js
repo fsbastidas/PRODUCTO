@@ -94,6 +94,44 @@ function downloadExcel() {
     XLSX.utils.book_append_sheet(wb, ws, "Base");
     XLSX.writeFile(wb, "Base_Instalada.xlsx");
 }
+function toggleForm() {
+    const f = document.getElementById("add-form");
+    f.style.display = f.style.display === "none" ? "flex" : "none";
+}
+
+async function saveRecord() {
+
+    const data = {
+        SERIE: document.getElementById("f-serie").value,
+        MODELO: document.getElementById("f-modelo").value,
+        CLIENTE: document.getElementById("f-cliente").value,
+        CIUDAD: document.getElementById("f-ciudad").value,
+        AREA: document.getElementById("f-area").value,
+        "CALIDAD EQUIPO": document.getElementById("f-calidad").value,
+        "VENTA FABRICA": document.getElementById("f-venta-fabrica").value,
+        INSTALACION: document.getElementById("f-instalacion").value,
+        "VENTA PERFECTECH": document.getElementById("f-venta-perfectech").value,
+        "INICIO GARANTIA": document.getElementById("f-inicio-garantia").value,
+        "TERMINO GARANTIA": document.getElementById("f-termino-garantia").value,
+        "ULTIMA REPARACION": document.getElementById("f-ultima-reparacion").value,
+        VENDEDOR: document.getElementById("f-vendedor").value,
+        DISTRIBUIDOR: document.getElementById("f-distribuidor").value
+    };
+
+    const res = await fetch(GOOGLE_SHEETS_API, {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+        alert("✅ Registro guardado");
+        loadDatabase(); // recarga la tabla
+        toggleForm();
+    } else {
+        alert("❌ Error al guardar");
+    }
+}
+
 
 // ===============================
 document.addEventListener("DOMContentLoaded", loadDatabase);
