@@ -13,10 +13,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 </head>
-
 <body>
 
 <h1>BASE ÁREA PRODUCTO</h1>
+
+<!-- 🔴 BOTÓN PARA CARGAR BASE -->
+<button id="btn-cargar" onclick="loadDatabase()">⬇️ Cargar Base de Datos</button>
 <button class="add-btn" onclick="toggleForm()">➕ Agregar registro</button>
 
 <div id="add-form" class="add-form" style="display:none;">
@@ -35,7 +37,6 @@
     <input id="f-vendedor" placeholder="Vendedor">
     <input id="f-distribuidor" placeholder="Distribuidor">
 
-    <!-- 👇 CORREGIDO -->
     <button type="button" onclick="saveRecord()">💾 Guardar</button>
 </div>
 
@@ -54,7 +55,6 @@
 
 <!-- FILTROS -->
 <div class="filters">
-
     <label>Modelo:
         <select id="filter-modelo" onchange="filterTable()">
             <option value="">Todos</option>
@@ -90,7 +90,6 @@
             <option value="">Todos</option>
         </select>
     </label>
-
 </div>
 
 <!-- TABLA -->
@@ -111,12 +110,89 @@
             <th>ÚLTIMA REPARACIÓN</th>
             <th>VENDEDOR</th>
             <th>DISTRIBUIDOR</th>
-            <th>ACCIONES</th> <!-- 👈 CLAVE -->
+            <th>ACCIONES</th>
         </tr>
     </thead>
-
     <tbody id="table-body"></tbody>
 </table>
 
+<!-- 🔴 LOADING -->
+<div id="loading" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.9);
+    display: none; /* oculto al inicio */
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 9999;
+">
+    ⏳ Cargando base de datos...
+</div>
+
+<!-- 🔽 SCRIPT -->
+<script>
+const btnCargar = document.getElementById("btn-cargar");
+const loadingDiv = document.getElementById("loading");
+
+function showLoading() {
+    loadingDiv.style.display = "flex";
+    btnCargar.disabled = true; // Bloqueamos botón mientras carga
+}
+
+function hideLoading() {
+    loadingDiv.style.display = "none";
+    btnCargar.disabled = false; // Habilitamos botón
+}
+
+function loadDatabase() {
+    showLoading();
+
+    // Reemplaza 'datos.json' con tu archivo real
+    fetch('datos.json')
+        .then(response => response.json())
+        .then(data => {
+            renderTable(data);
+            hideLoading();
+        })
+        .catch(error => {
+            console.error("Error al cargar la base de datos:", error);
+            hideLoading();
+        });
+}
+
+function renderTable(data) {
+    const tbody = document.getElementById("table-body");
+    tbody.innerHTML = ""; // limpiar tabla
+
+    data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.serie}</td>
+            <td>${item.modelo}</td>
+            <td>${item.cliente}</td>
+            <td>${item.ciudad}</td>
+            <td>${item.area}</td>
+            <td>${item.calidad}</td>
+            <td>${item.venta_fabrica}</td>
+            <td>${item.instalacion}</td>
+            <td>${item.venta_perfectech}</td>
+            <td>${item.inicio_garantia}</td>
+            <td>${item.termino_garantia}</td>
+            <td>${item.ultima_reparacion}</td>
+            <td>${item.vendedor}</td>
+            <td>${item.distribuidor}</td>
+            <td>✏️🗑️</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    document.getElementById("record-count").textContent = data.length;
+}
+</script>
+
 </body>
 </html>
+
