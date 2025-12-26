@@ -133,11 +133,61 @@
     <tbody id="table-body"></tbody>
 </table>
 
-<!-- 🔽 SCRIPT PARA OCULTAR LOADING -->
+<!-- 🔽 SCRIPT PARA CARGA DE DATOS -->
 <script>
 function hideLoading() {
     document.getElementById("loading").style.display = "none";
 }
+
+function loadDatabase(tipo) {
+    // Mostramos el loading
+    document.getElementById("loading").style.display = "flex";
+
+    // Simulación de fetch: reemplaza con tu fuente de datos real
+    fetch(`datos_${tipo}.json`) // ejemplo: datos_LED.json o datos_XENON.json
+        .then(response => response.json())
+        .then(data => {
+            renderTable(data);
+            hideLoading();
+        })
+        .catch(error => {
+            console.error("Error al cargar la base de datos:", error);
+            hideLoading();
+        });
+}
+
+function renderTable(data) {
+    const tbody = document.getElementById("table-body");
+    tbody.innerHTML = ""; // limpiar tabla
+
+    data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${item.serie}</td>
+            <td>${item.modelo}</td>
+            <td>${item.cliente}</td>
+            <td>${item.ciudad}</td>
+            <td>${item.area}</td>
+            <td>${item.calidad}</td>
+            <td>${item.venta_fabrica}</td>
+            <td>${item.instalacion}</td>
+            <td>${item.venta_perfectech}</td>
+            <td>${item.inicio_garantia}</td>
+            <td>${item.termino_garantia}</td>
+            <td>${item.ultima_reparacion}</td>
+            <td>${item.vendedor}</td>
+            <td>${item.distribuidor}</td>
+            <td>✏️🗑️</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    // Actualizar contador de registros
+    document.getElementById("record-count").textContent = data.length;
+}
+
+// Si quieres que cargue al inicio:
+// window.addEventListener("DOMContentLoaded", () => loadDatabase('LED'));
 </script>
 
 </body>
