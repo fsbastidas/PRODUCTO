@@ -3,99 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BASE AREA PRODUCTO</title>
+    <title>BASE ÁREA PRODUCTO</title>
+
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
-    <!-- Librerías para exportar Excel y PDF -->
+
+    <!-- Exportar -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 </head>
+
 <body>
-    <h1>BASE AREA PRODUCTO</h1>
 
-    <!-- Botones para cargar las bases de datos -->
-    <!-- <button onclick="loadDatabase('LED')" id="btnLed">📟 Ver Base FUJI LED</button>
-    <button onclick="loadDatabase('XENON')" id="btnXenon">🔆 Ver Base FUJI XENON</button> -->
-  
-    <!-- Botón de descarga con menú desplegable -->
-    <div class="dropdown">
-        <button class="dropbtn">⬇️</button>
-        <div class="dropdown-content">
-            <a href="#" onclick="downloadExcel()">📂 Descargar Excel</a>
-            <a href="#" onclick="downloadPDF()">📄 Descargar PDF</a>
-        </div>
+<h1>BASE ÁREA PRODUCTO</h1>
+
+<!-- Descargas -->
+<div class="dropdown">
+    <button class="dropbtn">⬇️</button>
+    <div class="dropdown-content">
+        <a href="#" onclick="downloadExcel()">📂 Descargar Excel</a>
     </div>
+</div>
 
-    <!-- Recuadro para mostrar la cantidad de filas -->
-    <div id="data-info">
-        <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
-    </div>
+<!-- Info -->
+<div id="data-info">
+    <p><strong>Registros cargados:</strong> <span id="record-count">0</span></p>
+</div>
 
-    <!-- Botón para mostrar el formulario de agregar -->
-    <button id="toggleAddForm" class="add-btn">➕ Agregar</button>
+<!-- FILTROS -->
+<div class="filters">
 
-    <!-- Formulario oculto para agregar una nueva fila -->
-    <div id="addForm" class="add-form" style="display: none;">
-        <input type="text" id="newModel" placeholder="Modelo">
-        <input type="text" id="newClient" placeholder="Cliente">
-        <input type="text" id="newTerritoy" placeholder="Territorio">
-        <input type="text" id="newAddress" placeholder="Dirección">
-        <input type="text" id="newCity" placeholder="Ciudad">
-        <input type="date" id="newDateSold">
-        <input type="date" id="newDateInstalled">
-        <button onclick="addRow()">✅ Guardar</button>
-    </div>
+    <label>Modelo:
+        <select id="filter-modelo" onchange="filterTable()">
+            <option value="">Todos</option>
+        </select>
+    </label>
 
-    <!-- Dropdowns de filtros -->
-    <div class="filters">
-        <label>Modelo:
-            <select id="filter-model" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-        <label>Cliente:
-            <select id="filter-client" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-        <label>Territorio:
-            <select id="filter-territoy" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-        <label>Ciudad:
-            <select id="filter-city" onchange="filterTable()">
-                <option value="">Todos</option>
-            </select>
-        </label>
-        <label>Fecha de Venta:
-            <select id="filter-date-sold" onchange="filterTable()">
-                <option value="">Todas</option>
-            </select>
-        </label>
-        <label>Fecha de Instalación:
-            <select id="filter-date-installed" onchange="filterTable()">
-                <option value="">Todas</option>
-            </select>
-        </label>
-    </div>
+    <label>Cliente:
+        <select id="filter-cliente" onchange="filterTable()">
+            <option value="">Todos</option>
+        </select>
+    </label>
 
-    <!-- Tabla -->
-    <table>
-        <thead>
-            <tr>
-                <th>Modelo</th>
-                <th>Cliente</th>
-                <th>Territorio</th>
-                <th>Dirección</th>
-                <th>Ciudad</th>
-                <th>Fecha de Venta</th>
-                <th>Fecha de Instalación</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-    </table>
+    <label>Ciudad:
+        <select id="filter-ciudad" onchange="filterTable()">
+            <option value="">Todos</option>
+        </select>
+    </label>
+
+    <label>Área:
+        <select id="filter-area" onchange="filterTable()">
+            <option value="">Todos</option>
+        </select>
+    </label>
+
+    <label>Vendedor:
+        <select id="filter-vendedor" onchange="filterTable()">
+            <option value="">Todos</option>
+        </select>
+    </label>
+
+    <label>Distribuidor:
+        <select id="filter-distribuidor" onchange="filterTable()">
+            <option value="">Todos</option>
+        </select>
+    </label>
+
+</div>
+
+<!-- TABLA -->
+<table>
+    <thead>
+        <tr>
+            <th>SERIE</th>
+            <th>MODELO</th>
+            <th>CLIENTE</th>
+            <th>CIUDAD</th>
+            <th>ÁREA</th>
+            <th>CALIDAD</th>
+            <th>VENTA FÁBRICA</th>
+            <th>INSTALACIÓN</th>
+            <th>VENTA PERFECTECH</th>
+            <th>INICIO GARANTÍA</th>
+            <th>FIN GARANTÍA</th>
+            <th>ÚLTIMA REPARACIÓN</th>
+            <th>VENDEDOR</th>
+            <th>DISTRIBUIDOR</th>
+        </tr>
+    </thead>
+
+    <tbody id="table-body"></tbody>
+</table>
+
 </body>
 </html>
