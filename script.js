@@ -10,6 +10,9 @@ let editIndex = null;
 // ===============================
 // CARGAR BASE DE DATOS
 async function loadDatabase() {
+    const loading = document.getElementById("loading");
+    loading.style.display = "flex"; // Mostrar mensaje de cargando
+
     try {
         const res = await fetch(GOOGLE_SHEETS_API);
         if (!res.ok) throw new Error("Error API");
@@ -23,6 +26,8 @@ async function loadDatabase() {
     } catch (e) {
         alert("❌ No se pudo cargar la base");
         console.error(e);
+    } finally {
+        loading.style.display = "none"; // Ocultar cargando siempre
     }
 }
 
